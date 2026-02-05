@@ -10,8 +10,9 @@ function [h_out, T_out, s_out] = turbina(T,P,nt,P_out,fluido)
     %---------------------------------------------------------
    
     %---------------------------------------------------------
-    %Condiciones de Salida
+    %Condiciones de Salidaaaa
     
+    %aguacate
     s_outs = s; %Suposición Isentropica
     
     HS = refpropm('H','P',P_out,'S',s_outs,fluido);  %Entalpía Isentropica
