@@ -68,7 +68,7 @@ resultados2 = [(T-273.15)', varout11', varout12', varout13', ...
     varout21', varout22', varout23', varout24', varout25', varout26', varout27', ...
     varout28', varout29', varout30'
 ];
-resultados3 = [(T-273.15)', varout31', varout32', varout33', varout34', varout35', varout36'
+resultados4 = [(T-273.15)', varout31', varout32', varout33', varout34', varout35', varout36'
     
 ];
 
@@ -76,7 +76,7 @@ resultados3 = [(T-273.15)', varout31', varout32', varout33', varout34', varout35
 
 xlswrite('Salidas.xlsx',resultados,'T','B3')
 xlswrite('Salidas.xlsx',resultados2,'T','B16')
-xlswrite('Salidas.xlsx',resultados3,'T','B29')
+xlswrite('Salidas.xlsx',resultados4,'T','B29')
 
 
 
