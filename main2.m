@@ -77,6 +77,7 @@ resultados3 = [(T-273.15)', varout31', varout32', varout33', varout34', varout35
 xlswrite('Salidas.xlsx',resultados ,'T','B3')
 xlswrite('Salidas.xlsx',resultados2 ,'T','B16')
 xlswrite('Salidas.xlsx',resultados3 ,'T','B29')
+%tierro
 
 
 
