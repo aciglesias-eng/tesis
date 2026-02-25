@@ -143,7 +143,7 @@ function PEM = PEM_LCA_from_paper(GWP_elec, WNETO, years, disponibilidad, horas)
     E_to_PEM_life = WNETO * horas * years * disponibilidad;
     H2_life       = E_to_PEM_life / e_PEM;
 
-
+    % Paper: construcción PEM excluida y decom no cuantificado -> 0
     PEM.Yco_abs    = GWP_mfg_perkg * H2_life;
     PEM.Yom_abs    = GWP_op_perkg  * H2_life;
     PEM.Yde_abs    = 0;
