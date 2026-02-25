@@ -160,7 +160,7 @@ Y_sum_abs = Yco_total + Yde_total + Yom_total;
 Ytotal    = Y_sum_abs / E_util; % [kgCO2-eq/kWh_e]
 
 Y_componentes = [Y.Evap,Y.Cond,Y.HTR,Y.LTR,Y.Cooler,Y.HE,Y.T1,Y.T2,Y.T3, ...
-                 Y.C1,Y.C2,Y.B2,Y.wf,Y.co2,Y.CSP,Y.PEM];
+                 Y.C1,Y.C2,Y.B2,Y.wf,Y.co2,Y.CSP];
 end
 
 % ------------------ PEM: materiales + electricidad (como el paper) ------------------
