@@ -54,7 +54,7 @@ varout32(i) = In(1,2);     % Environmental effect factor (EEF)
 varout33(i) = In(1,3);     % Exergetic sustainability index (ESI)
 
 varout34(i) = Ytotal;     % Impacto ambiental total;
-varout35(i) = Ytotal_PEM; % Impacto ambiental PEM respecto a Rankine
+varout35(i) = Ytotal_PEM; % GWP PEM respecto a total kgCO2eq/kgH2
 varout36(i) = n_ex_2;
 end
 

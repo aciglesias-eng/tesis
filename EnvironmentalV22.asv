@@ -1,4 +1,4 @@
-function [Ytotal, Yco_total, Yde_total, Yom_total, Y_componentes, Ytotal_PEM] = EnvironmentalV22( ...
+function [GWP_elec, Yco_total, Yde_total, Yom_total, Y_componentes, Ytotal_PEM,Yco_total_PEM, Yde_total_PEM, Yom_total_PEM] = EnvironmentalV22( ...
     W_t1, W_t2, W_t3, W_c1, W_c2, W_b2, A_HTR, A_LTR, A_cooler, A_evap, A_cond, A_HE)
 
 format long
@@ -96,7 +96,6 @@ co2_de = (co2_c - co2_op) * 0.03;
     Yco.co2    = mu_CO2_mass*co2_c+Yde.co2;
 
     Yco.CSP    = mu_CSP*E_util+Yde.CSP;
-    Y_CSP_abs  = mu_CSP * E_util;        % [kgCO2-eq]
 
     Yco_block  = Yco.Evap+Yco.HE+Yco.Cond+Yco.HTR+Yco.LTR+Yco.Cooler+Yco.T1...
                 +Yco.T2+Yco.T3+Yco.C1+Yco.C2+Yco.B2+Yco.wf+Yco.co2; %
@@ -145,28 +144,26 @@ co2_de = (co2_c - co2_op) * 0.03;
 
     Y.CSP    = Yco.CSP + Yde.CSP + Yom.CSP;
     
-
 % ------------------ FACTOR ELECTRICO TOTAL (bloque de potencia) ------------------
 GWP_elec = (Yco_block + Yom_block + Yde_block) / E_util; % [kgCO2-eq/kWh_e]
 
 % ------------------ ACOPLE PEM ------------------
-Ytotal_PEM = PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas);
-
+[Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM]= PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas);
+Y_PEME = Yom_total_PEM+Yde_total_PEM+Yco_total_PEM;
 % ------------------ TOTALES SISTEMA COMPLETO ------------------
-Yco_total = Yco_block + Yco.CSP + Ytotal_PEM.Yco_abs;
-Yde_total = Yde_block + Yde.CSP + Ytotal_PEM.Yde_abs;
-Yom_total = Yom_block + Yom.CSP + Ytotal_PEM.Yom_abs;
+Yco_total = Yco_block + Yco.CSP + Yco_total_PEM;
+Yde_total = Yde_block + Yde.CSP + Yde_total_PEM;
+Yom_total = Yom_block + Yom.CSP + Yom_total_PEM;
 
-Y_sum_abs = Yco_total + Yde_total + Yom_total;
-Ytotal    = Y_sum_abs / E_util; % [kgCO2-eq/kWh_e]
 
-% Componentes: [bloque potencia, CSP, PEM]
-Y_componentes = [ (Yco_block + Yom_block + Yde_block), Y_CSP_abs, Ytotal_PEM.Ytotal_abs ];
 
+Y_componentes = [Y.Evap,Y.Cond,Y.HTR,Y.LTR,Y.Cooler,Y.HE,Y.T1,Y.T2,Y.T3, ...
+                 Y.C1,Y.C2,Y.B2,Y.wf,Y.co2,Y.CSP,Y_PEME];
+YCOPROD = sum;
+             
 end
 
-% ------------------ PEM: materiales + electricidad (como el paper) ------------------
-function [Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM,Y_componentes_PEM]=PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas)
+function [Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM]=PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas)
 
     % O&M PEM
     e_PEM = 54.81; % [kWh/kgH2]
@@ -196,7 +193,7 @@ function [Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM,Y_componentes_PEM
     EF_platinum   = 35000;
     EF_act_carbon = 2.0;
     EF_nafion     = 6.0;
-    EF_plastics   = 3.0;
+    EF_plastics   = 3.31;
     EF_cement     = 0.84;
 
     GWP_mfg_perkg = ...
@@ -214,18 +211,12 @@ function [Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM,Y_componentes_PEM
         m_cement     * EF_cement;
 
     GWP_op_perkg    = e_PEM * GWP_elec;
-    GWP_total_perkg = GWP_mfg_perkg + GWP_op_perkg;
 
-    E_to_PEM_life = WNETO * horas * years * disponibilidad;
-    H2_life       = E_to_PEM_life / e_PEM;
+    E_util = WNETO * horas * years * disponibilidad;
+    H2_life       = E_util/e_PEM;
 
-
-    PEM.Yco_abs    = GWP_mfg_perkg * H2_life;
-    PEM.Yom_abs    = GWP_op_perkg  * H2_life;
-    PEM.Yde_abs    = 0;
-    Ytotal_PEM     = PEM.Yco_abs + PEM.Yom_abs + PEM.Yde_abs;
-
-    PEM.GWP_mfg_perkg   = GWP_mfg_perkg;
-    PEM.GWP_op_perkg    = GWP_op_perkg;
-    PEM.GWP_total_perkg = GWP_total_perkg;
+    Yco_total_PEM    = 0;
+    Yom_total_PEM    = GWP_op_perkg*H2_life + GWP_mfg_perkg*H2_life;
+    Yde_total_PEM    = 0;
+    Ytotal_PEM       = GWP_op_perkg + GWP_mfg_perkg;
 end
