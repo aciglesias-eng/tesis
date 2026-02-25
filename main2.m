@@ -79,7 +79,7 @@ xlswrite('Salidas.xlsx',resultados2 ,'T','B16')
 xlswrite('Salidas.xlsx',resultados3 ,'T','B29')
 
 
-%tierro y sampo
+
 
 
 
