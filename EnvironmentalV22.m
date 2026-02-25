@@ -51,46 +51,120 @@ wf_de = (wf_c - wf_op) * 0.03;
 co2_c  = 5.57 * (W_t1 + W_t2);
 co2_op = co2_c * 0.10;
 co2_de = (co2_c - co2_op) * 0.03;
+%--------------------------------------------------------------------------
+% Decomisionamiento
+    Yde.Evap   = peed*mu_eq_mass*M_Evap;
+    Yde.Cond   = peed*mu_eq_mass*M_Cond;
+    Yde.HTR    = peed*mu_eq_mass*M_HTR;
+    Yde.LTR    = peed*mu_eq_mass*M_LTR;
+    Yde.Cooler = peed*mu_eq_mass*M_Cooler;
+    Yde.HE     = peed*mu_eq_mass*M_HE;
 
-% ------------------ DECOMISIONAMIENTO (bloque potencia) ------------------
-Yde_block = peed * mu_eq_mass * (M_Evap + M_Cond + M_HTR + M_LTR + M_Cooler + M_HE) +...
-            peed * mu_eq_mass * (M_T1 + M_T2 + M_T3 + M_C1 + M_C2 + M_B2) +...
-            (mu_tolueno_mass * wf_de) + (mu_CO2_mass * co2_de);
+    Yde.T1     = peed*mu_eq_mass*M_T1;
+    Yde.T2     = peed*mu_eq_mass*M_T2;
+    Yde.T3     = peed*mu_eq_mass*M_T3;
 
-% ------------------ COMISIONAMIENTO / CAPEX (bloque potencia) ------------------
-Yco_block = mu_eq_mass * (M_Evap + M_Cond + M_HTR + M_LTR + M_Cooler + M_HE) +...
-            mu_eq_mass * (M_T1 + M_T2 + M_T3 + M_C1 + M_C2 + M_B2) +...
-            (mu_tolueno_mass * wf_c) + (mu_CO2_mass * co2_c);
+    Yde.C1     = peed*mu_eq_mass*M_C1;
+    Yde.C2     = peed*mu_eq_mass*M_C2;
+    Yde.B2     = peed*mu_eq_mass*M_B2;
 
-% ------------------ O&M (bloque potencia) ------------------
-Yom_block = (mu_tolueno_mass * wf_op) + (mu_CO2_mass * co2_op);
+    Yde.wf     = mu_tolueno_mass*wf_de;
+    Yde.co2    = mu_CO2_mass*co2_de;
 
-% ------------------ CSP (impacto por energía) ------------------
-Y_CSP_abs  = mu_CSP * E_util;        % [kgCO2-eq]
-Yco_CSP    = Y_CSP_abs;
-Yde_CSP    = peed * Y_CSP_abs;  
+    Yde.CSP    = peed*(E_util*mu_CSP);
+   
+    Yde_block  = Yde.Evap+Yde.HE+Yde.Cond+Yde.HTR+Yde.LTR+Yde.Cooler+Yde.T1...
+                +Yde.T2+Yde.T3+Yde.C1+Yde.C2+Yde.B2+Yde.wf+Yde.co2; %
+%--------------------------------------------------------------------------
+% Comisionamiento
+    Yco.Evap   = mu_eq_mass*M_Evap+Yde.Evap;
+    Yco.Cond   = mu_eq_mass*M_Cond+Yde.Cond;
+    Yco.HTR    = mu_eq_mass*M_HTR+Yde.HTR;
+    Yco.LTR    = mu_eq_mass*M_LTR+Yde.LTR;
+    Yco.Cooler = mu_eq_mass*M_Cooler+Yde.Cooler;
+    Yco.HE     = mu_eq_mass*M_HE+Yde.HE;
+
+    Yco.T1     = mu_eq_mass*M_T1+Yde.T1;
+    Yco.T2     = mu_eq_mass*M_T2+Yde.T2;
+    Yco.T3     = mu_eq_mass*M_T3+Yde.T3;
+
+    Yco.C1     = mu_eq_mass*M_C1+Yde.C1;
+    Yco.C2     = mu_eq_mass*M_C2+Yde.C2;
+    Yco.B2     = mu_eq_mass*M_B2+Yde.B2;
+
+    Yco.wf     = mu_tolueno_mass*wf_c+Yde.wf;
+    Yco.co2    = mu_CO2_mass*co2_c+Yde.co2;
+
+    Yco.CSP    = mu_CSP*E_util+Yde.CSP;
+
+    Yco_block  = Yco.Evap+Yco.HE+Yco.Cond+Yco.HTR+Yco.LTR+Yco.Cooler+Yco.T1...
+                +Yco.T2+Yco.T3+Yco.C1+Yco.C2+Yco.B2+Yco.wf+Yco.co2; %
+%--------------------------------------------------------------------------
+% Operación y mantenimiento
+    Yom.Evap   = 0;
+    Yom.Cond   = 0;
+    Yom.HTR    = 0;
+    Yom.LTR    = 0;
+    Yom.Cooler = 0;
+    Yom.HE  = 0;
+
+    Yom.T1     = 0;
+    Yom.T2     = 0;
+    Yom.T3     = 0;
+
+    Yom.C1     = 0;
+    Yom.C2     = 0;
+    Yom.B2     = 0;
+
+    Yom.wf     = 0.10 * Yco.wf;
+    Yom.co2    = 0.10 * Yco.co2;
+    
+    Yom.CSP    = 0;
+    
+    Yom_block = Yom.wf+Yom.co2;
+%--------------------------------------------------------------------------
+% Impacto total por componente
+    Y.Evap   = Yco.Evap   + Yde.Evap   + Yom.Evap;
+    Y.Cond   = Yco.Cond   + Yde.Cond   + Yom.Cond;
+    Y.HTR    = Yco.HTR    + Yde.HTR    + Yom.HTR;
+    Y.LTR    = Yco.LTR    + Yde.LTR    + Yom.LTR;
+    Y.Cooler = Yco.Cooler + Yde.Cooler + Yom.Cooler;
+    Y.HE     = Yco.HE  + Yde.HE  + Yom.HE;
+
+    Y.T1     = Yco.T1 + Yde.T1 + Yom.T1;
+    Y.T2     = Yco.T2 + Yde.T2 + Yom.T2;
+    Y.T3     = Yco.T3 + Yde.T3 + Yom.T3;
+
+    Y.C1     = Yco.C1 + Yde.C1 + Yom.C1;
+    Y.C2     = Yco.C2 + Yde.C2 + Yom.C2;
+    Y.B2     = Yco.B2 + Yde.B2 + Yom.B2;
+
+    Y.wf     = Yco.wf + Yde.wf + Yom.wf;
+    Y.co2    = Yco.co2 + Yde.co2 + Yom.co2;
+
+    Y.CSP    = Yco.CSP + Yde.CSP + Yom.CSP;
+    
 
 % ------------------ FACTOR ELECTRICO TOTAL (bloque de potencia) ------------------
 GWP_elec = (Yco_block + Yom_block + Yde_block) / E_util; % [kgCO2-eq/kWh_e]
 
 % ------------------ ACOPLE PEM ------------------
-Ytotal_PEM = PEM_LCA_from_paper(GWP_elec, WNETO, years, disponibilidad, horas);
+[Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM]= PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas);
 
 % ------------------ TOTALES SISTEMA COMPLETO ------------------
-Yco_total = Yco_block + Yco_CSP + Ytotal_PEM.Yco_abs;
-Yde_total = Yde_block + Yde_CSP + Ytotal_PEM.Yde_abs;
-Yom_total = Yom_block + Yom_CSP + Ytotal_PEM.Yom_abs;
+Yco_total = Yco_block + Yco.CSP + Yco_total_PEM;
+Yde_total = Yde_block + Yde.CSP + Yde_total_PEM;
+Yom_total = Yom_block + Yom.CSP + Yom_total_PEM;
 
 Y_sum_abs = Yco_total + Yde_total + Yom_total;
 Ytotal    = Y_sum_abs / E_util; % [kgCO2-eq/kWh_e]
 
-% Componentes: [bloque potencia, CSP, PEM]
-Y_componentes = [ (Yco_block + Yom_block + Yde_block), Y_CSP_abs, Ytotal_PEM.Ytotal_abs ];
-
+Y_componentes = [Y.Evap,Y.Cond,Y.HTR,Y.LTR,Y.Cooler,Y.HE,Y.T1,Y.T2,Y.T3, ...
+                 Y.C1,Y.C2,Y.B2,Y.wf,Y.co2,Y.CSP,Y.PEM];
 end
 
 % ------------------ PEM: materiales + electricidad (como el paper) ------------------
-function PEM = PEM_LCA_from_paper(GWP_elec, WNETO, years, disponibilidad, horas)
+function [Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM]=PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas)
 
     % O&M PEM
     e_PEM = 54.81; % [kWh/kgH2]
@@ -115,13 +189,13 @@ function PEM = PEM_LCA_from_paper(GWP_elec, WNETO, years, disponibilidad, horas)
     EF_stainless  = 6.1;
     EF_aluminum   = 8.32;
     EF_copper     = 2.7;
-    EF_titanium   = 13.5;
+    EF_titanium   = 20.6;
     EF_iridium    = 12000;
     EF_platinum   = 35000;
     EF_act_carbon = 2.0;
     EF_nafion     = 6.0;
-    EF_plastics   = 3.0;
-    EF_cement     = 0.12;
+    EF_plastics   = 3.31;
+    EF_cement     = 0.84;
 
     GWP_mfg_perkg = ...
         m_low_alloy  * EF_steel_low  + ...
@@ -138,18 +212,12 @@ function PEM = PEM_LCA_from_paper(GWP_elec, WNETO, years, disponibilidad, horas)
         m_cement     * EF_cement;
 
     GWP_op_perkg    = e_PEM * GWP_elec;
-    GWP_total_perkg = GWP_mfg_perkg + GWP_op_perkg;
 
     E_to_PEM_life = WNETO * horas * years * disponibilidad;
     H2_life       = E_to_PEM_life / e_PEM;
 
-
-    PEM.Yco_abs    = GWP_mfg_perkg * H2_life;
-    PEM.Yom_abs    = GWP_op_perkg  * H2_life;
-    PEM.Yde_abs    = 0;
-    PEM.Ytotal_abs = PEM.Yco_abs + PEM.Yom_abs + PEM.Yde_abs;
-
-    PEM.GWP_mfg_perkg   = GWP_mfg_perkg;
-    PEM.GWP_op_perkg    = GWP_op_perkg;
-    PEM.GWP_total_perkg = GWP_total_perkg;
+    Yco_total_PEM    = GWP_mfg_perkg * H2_life;
+    Yom_total_PEM    = GWP_op_perkg  * H2_life;
+    Yde_total_PEM    = 0;
+    Ytotal_PEM       = Yco_total_PEM + Yom_total_PEM + Yde_total_PEM;
 end

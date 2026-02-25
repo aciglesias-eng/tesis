@@ -434,7 +434,7 @@ format long
     In(1,2)=EEF;
     In(1,3)=ESI;
     
-    [Ytotal,Yco_total,Yde_total,Yom_total,Y_componentes,Ytotal_PEM] = EnvironmentalV22(W_t1/1000,W_t2/1000,W_t3/1000,W_c1/1000,W_c2/1000,W_b2/1000,Areas(1,1), Areas(1,2), Areas(1,5), Areas(1,3) ,Areas(1,4), Areas(1,6));
+        [Ytotal, Yco_total, Yde_total, Yom_total, Y_componentes, Ytotal_PEM] = EnvironmentalV22(W_t1/1000,W_t2/1000,W_t3/1000,W_c1/1000,W_c2/1000,W_b2/1000,Areas(1,1), Areas(1,2), Areas(1,5), Areas(1,3) ,Areas(1,4), Areas(1,6));
 
 % --------------------------------------------------------------------------------------------------------------------------------------------------
 % CALCULO EXERGOECONÓMICO ---------------------------------------------------------------------  
