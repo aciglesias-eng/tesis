@@ -5,7 +5,7 @@ format long
 
 % ------------------ PARAMETROS GENERALES ------------------
 years          = 20;      % [años]
-disponibilidad = 0.7;     % [-]
+disponibilidad = 0.85;     % [-]
 horas          = 24*365;  % [h/año]
 peed           = 0.05;    % 
 
@@ -74,7 +74,7 @@ co2_de = (co2_c - co2_op) * 0.03;
     Yde.CSP    = peed*(E_util*mu_CSP);
    
     Yde_block  = Yde.Evap+Yde.HE+Yde.Cond+Yde.HTR+Yde.LTR+Yde.Cooler+Yde.T1...
-                +Yde.T2+Yde.T3+Yde.C1+Yde.C2+Yde.B2+Yde.wf+Yde.co2; %
+                +Yde.T2+Yde.T3+Yde.C1+Yde.C2+Yde.B2+Yde.wf+Yde.co2+Yde.CSP; %
 %--------------------------------------------------------------------------
 % Comisionamiento
     Yco.Evap   = mu_eq_mass*M_Evap+Yde.Evap;
@@ -98,7 +98,7 @@ co2_de = (co2_c - co2_op) * 0.03;
     Yco.CSP    = mu_CSP*E_util+Yde.CSP;
 
     Yco_block  = Yco.Evap+Yco.HE+Yco.Cond+Yco.HTR+Yco.LTR+Yco.Cooler+Yco.T1...
-                +Yco.T2+Yco.T3+Yco.C1+Yco.C2+Yco.B2+Yco.wf+Yco.co2; %
+                +Yco.T2+Yco.T3+Yco.C1+Yco.C2+Yco.B2+Yco.wf+Yco.co2+Yco.CSP; %
 %--------------------------------------------------------------------------
 % Operación y mantenimiento
     Yom.Evap   = 0;
@@ -145,15 +145,15 @@ co2_de = (co2_c - co2_op) * 0.03;
     Y.CSP    = Yco.CSP + Yde.CSP + Yom.CSP;
     
 % ------------------ FACTOR ELECTRICO TOTAL (bloque de potencia) ------------------
-GWP_elec = (Yco_block + Yom_block + Yde_block) / E_util; % [kgCO2-eq/kWh_e]
+GWP_elec = (Yco_block + Yom_block + Yde_block)/E_util; % [kgCO2-eq/kWh_e]
 
 % ------------------ ACOPLE PEM ------------------
 [Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM]= PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas);
 Y_PEME = Yom_total_PEM+Yde_total_PEM+Yco_total_PEM;
 % ------------------ TOTALES SISTEMA COMPLETO ------------------
-Yco_total = Yco_block + Yco.CSP + Yco_total_PEM;
-Yde_total = Yde_block + Yde.CSP + Yde_total_PEM;
-Yom_total = Yom_block + Yom.CSP + Yom_total_PEM;
+Yco_total = Yco_block + Yco.CSP;
+Yde_total = Yde_block + Yde.CSP;
+Yom_total = Yom_block + Yom.CSP;
 
 
 
