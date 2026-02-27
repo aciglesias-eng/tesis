@@ -42,6 +42,10 @@ format long
     Prr = Phigh/r2;          % Presión después de salir de la turbina 1
     Tr = Thigh + 150;        % Temperatura del recibidor
     I = 914;                 % Radiacion solar = 950 W/m2
+    tao = 8000;              % 
+    interes = 0.12;
+    years = 20;
+    gamma = 0.06;
     HX = [460,160,336,125,5; % Librería de datos de intercambiadores de calor
         799,160,675,150,12;
         837,310,590,200,28;
@@ -438,23 +442,44 @@ format long
 
 % --------------------------------------------------------------------------------------------------------------------------------------------------
 % CALCULO EXERGOECONÓMICO ---------------------------------------------------------------------  
-    % CALCULO Zdot
-        % CALCULO Z
-            % BRAYTON
-                Z_t1 = 479.34*m_CO2*(1/(0.93-nt))*log(r1)*(1+exp(0.036*T1-54.4));
-                Z_t2 = 479.34*m_CO2*(1/(0.93-nt))*log(r2)*(1+exp(0.036*T3-54.4));
-                Z_c1 = 71.1*m_CO2*splitA*(1/(0.92-nc))*r1*log(r1);
-                Z_c2 = 71.1*m_CO2*splitB*(1/(0.92-nc))*r1*log(r1);
-                Z_HTR = 2681*(A_HTR)^0.59;
-                Z_LTR = 2681*(A_LTR)^0.59;
-                Z_COOLER = ;
-            % ORC
-                Z_t3 = 4405*((W_t3/1000)^0.7); 
-                Z_b2 = 1120*((W_b2/1000)^0.8);
-                
-            % PEM
-                Z_PEM = 1000*(WNETO/1000);
- 
+    % CALCULO Z
+        % BRAYTON
+            Z_t1 = 479.34*m_CO2*(1/(0.93-nt))*log(r1)*(1+exp(0.036*T1-54.4));
+            Z_t2 = 479.34*m_CO2*(1/(0.93-nt))*log(r2)*(1+exp(0.036*T3-54.4));
+            Z_c1 = 71.1*m_CO2*splitA*(1/(0.92-nc))*r1*log(r1);
+            Z_c2 = 71.1*m_CO2*splitB*(1/(0.92-nc))*r1*log(r1);
+            Z_HTR = 2681*(A_HTR)^0.59;
+            Z_LTR = 2681*(A_LTR)^0.59;
+            Z_COOLER = 2681*(A_cooler)^0.59;
+            Z_HE = 2143*(A_HE)^0.514;
+        % ORC
+            Z_t3 = 4405*((W_t3/1000)^0.7); 
+            Z_b2 = 1120*((W_b2/1000)^0.8);
+            Z_ORC_EVAP = 2143*(A_ORC(1))^0.514;
+            Z_ORC_COND = 2143*(A_ORC(2))^0.514;
+        % PEM
+            Z_PEM = 1000*(WNETO/1000);
+            
+    % CALCULO Zdot      
+        CRF = (interes*(1+interes)^n)/(-1+(1+interes)^n);
+         % BRAYTON
+            Zdot(1,1) = (Z_t1)*(CRF+gamma)/tao;
+            Zdot(1,2) = (Z_t2)*(CRF+gamma)/tao;
+            Zdot(1,3) = (Z_c1)*(CRF+gamma)/tao;
+            Zdot(1,4) = (Z_c2)*(CRF+gamma)/tao;
+            Zdot(1,5) = (Z_HTR)*(CRF+gamma)/tao;
+            Zdot(1,6) = (Z_LTR)*(CRF+gamma)/tao;
+            Zdot(1,7) = (Z_COOLER)*(CRF+gamma)/tao;
+            Zdot(1,8) = (Z_HE)*(CRF+gamma)/tao;
+        % ORC
+            Zdot(1,9)   = (Z_t3)*(CRF+gamma)/tao; 
+            Zdot(1,10)  = (Z_b2)*(CRF+gamma)/tao;
+            Zdot(1,11)  = (Z_ORC_EVAP)*(CRF+gamma)/tao;
+            Zdot(1,12)  = (Z_ORC_COND)*(CRF+gamma)/tao;
+        % PEM
+            Zdot(1,13) = (Z_PEM)*(CRF+gamma)/tao;
+            
+    % CALCULO    
 
 
 
