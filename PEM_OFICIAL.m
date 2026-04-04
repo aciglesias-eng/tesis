@@ -175,7 +175,7 @@ xOch = x_ch_O/M_O;              % kJ/kg
 XO = m_O*xOch;               % kJ/s
 
 Xd_PEM = W_PEM/1000+XH2O_in_ph+XH2O_in_ch-(XH2+XO);
-Xd_PEM_TOT = [Xd_HE,XH2,XH2O_in_ph,Xd_PEM];
+Xd_PEM_TOT = [Xd_HE,XH2,XH2O_in_ph,Xd_PEM,XO];
 
 % RESULTADOS
 T = [T6AO, T7,  T19, T20];      % K

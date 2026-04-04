@@ -1,7 +1,7 @@
 clear%;clc
 T=[500 550 600 650 700 750 800]+273.15;
 nc=0.89;
-nt=0.93;
+nt=0.929;
 rc=2.74;
 pmaire=100; % EN PORCENTAJE
 

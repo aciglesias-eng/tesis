@@ -52,10 +52,10 @@ function [T6AO3, A_ORC, W_t3, W_b2, Xd_orc, TPhsmx_orc, Q_cond_vec, Q_evap_vec] 
 
         % Punto 18
             P18 = Phigh;
-            s18 = s17;
-            h18s = refpropm('H','P',P18,'S',s18,fluid);
-            h18 = h17+(h18s-h17)/np;
-            T18 = refpropm('T','P',P18,'H',h18,fluid);
+            s18s = s17;                                 
+            h18s = refpropm('H','P',P18,'S',s18s,fluid);
+            h18  = h17 + (h18s-h17)/np;               
+            [T18,s18] = refpropm('TS','P',P18,'H',h18,fluid);
             x18 = (h18-h0t)-T0*(s18-s0t);
 
         % Punto 15ls
