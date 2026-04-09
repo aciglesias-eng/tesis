@@ -32,7 +32,7 @@ format long
     T0 = 25 + 273.15;        % Temperatura ambiente (K)
     P0 = 101.325;            % Presión atmosférica (kPa) 
     Tlow = 55 + 273.15;      % Temp low (K)--> Guajira
-    m_CO2 = 100;              % Flujo másico (kg/s)
+    m_CO2 = 1000;              % Flujo másico (kg/s)
     eff = 0.95;              % Eficacia de los recuperadores (aprox para el punto 6)
     Nr = 40;                 % Nr = Número de segmentos para discretizar los intercambiadores
     r1 = rc;                 % Relación de presión1 --> r1 = Phigh/Plow (turbinas completas)

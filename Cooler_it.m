@@ -16,7 +16,7 @@ function [T6AO, A_Cooler, Q_cooler, Xd_cooler,x_loss_cooler, TPhsmx_cooler] = Co
 
 %Entradas COOLER----------------------------------------------------------------------------------------------------------------------
     
-    m_air_nominal = 1.16;   
+    m_air_nominal = 10; %1.16   
     phi = max(0, min(100, apertura_pct))/100;
     m_air_equiv = phi * m_air_nominal;
     
