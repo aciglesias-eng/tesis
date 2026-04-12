@@ -15,10 +15,12 @@ varout21 = nan(1,length(T)); varout22 = nan(1,length(T)); varout23 = nan(1,lengt
 varout25 = nan(1,length(T)); varout26 = nan(1,length(T)); varout27 = nan(1,length(T)); varout28 = nan(1,length(T));
 varout29 = nan(1,length(T)); varout30 = nan(1,length(T)); varout31 = nan(1,length(T)); varout32 = nan(1,length(T));
 varout33 = nan(1,length(T)); varout34 = nan(1,length(T)); varout35 = nan(1,length(T)); varout36 = nan(1,length(T));
+varout37 = nan(1,length(T)); varout38 = nan(1,length(T)); varout39 = nan(1,length(T));
+
 
 
 for i=1:length(rc)   
-[WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T, rc(i), pmaire);
+[LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T, rc(i), pmaire);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
 varout3(i)   = n_ciclo;    % Eficiencia energética ciclo
@@ -69,9 +71,8 @@ resultados2 = [(rc)', varout11', varout12', varout13', ...
     varout21', varout22', varout23', varout24', varout25', varout26', varout27', ...
     varout28', varout29', varout30'
 ];
-resultados3 = [(rc)', varout31', varout32', varout33', varout34', varout35', varout36'
-    
-];
+resultados3 = [(rc)', varout31', varout32', varout33', varout34', varout35',...
+    varout36', varout37', varout38', varout39'
 
 
 
@@ -96,10 +97,12 @@ varout21 = nan(1,length(T)); varout22 = nan(1,length(T)); varout23 = nan(1,lengt
 varout25 = nan(1,length(T)); varout26 = nan(1,length(T)); varout27 = nan(1,length(T)); varout28 = nan(1,length(T));
 varout29 = nan(1,length(T)); varout30 = nan(1,length(T)); varout31 = nan(1,length(T)); varout32 = nan(1,length(T));
 varout33 = nan(1,length(T)); varout34 = nan(1,length(T)); varout35 = nan(1,length(T)); varout36 = nan(1,length(T));
+varout37 = nan(1,length(T)); varout38 = nan(1,length(T)); varout39 = nan(1,length(T));
+
 
 
 for i=1:length(nt)   
-[WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt(i), nc, T, rc, pmaire);
+[LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt(i), nc, T, rc, pmaire);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
 varout3(i)   = n_ciclo;    % Eficiencia energética ciclo
@@ -150,8 +153,8 @@ resultados2 = [(nt)', varout11', varout12', varout13', ...
     varout21', varout22', varout23', varout24', varout25', varout26', varout27', ...
     varout28', varout29', varout30'
 ];
-resultados3 = [(nt)', varout31', varout32', varout33', varout34', varout35', varout36'
-    
+resultados3 = [(nt)', varout31', varout32', varout33', varout34', varout35',...
+    varout36', varout37', varout38', varout39'
 ];
 
 
@@ -178,10 +181,12 @@ varout21 = nan(1,length(T)); varout22 = nan(1,length(T)); varout23 = nan(1,lengt
 varout25 = nan(1,length(T)); varout26 = nan(1,length(T)); varout27 = nan(1,length(T)); varout28 = nan(1,length(T));
 varout29 = nan(1,length(T)); varout30 = nan(1,length(T)); varout31 = nan(1,length(T)); varout32 = nan(1,length(T));
 varout33 = nan(1,length(T)); varout34 = nan(1,length(T)); varout35 = nan(1,length(T)); varout36 = nan(1,length(T));
+varout37 = nan(1,length(T)); varout38 = nan(1,length(T)); varout39 = nan(1,length(T));
+
 
 
 for i=1:length(nc)   
-[WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc(i), T, rc, pmaire);
+[LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc(i), T, rc, pmaire);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
 varout3(i)   = n_ciclo;    % Eficiencia energética ciclo
@@ -232,8 +237,8 @@ resultados2 = [(nc)', varout11', varout12', varout13', ...
     varout21', varout22', varout23', varout24', varout25', varout26', varout27', ...
     varout28', varout29', varout30'
 ];
-resultados3 = [(nc)', varout31', varout32', varout33', varout34', varout35', varout36'
-    
+resultados3 = [(nc)', varout31', varout32', varout33', varout34', varout35',...
+    varout36', varout37', varout38', varout39'
 ];
 
 
@@ -259,10 +264,13 @@ varout21 = nan(1,length(T)); varout22 = nan(1,length(T)); varout23 = nan(1,lengt
 varout25 = nan(1,length(T)); varout26 = nan(1,length(T)); varout27 = nan(1,length(T)); varout28 = nan(1,length(T));
 varout29 = nan(1,length(T)); varout30 = nan(1,length(T)); varout31 = nan(1,length(T)); varout32 = nan(1,length(T));
 varout33 = nan(1,length(T)); varout34 = nan(1,length(T)); varout35 = nan(1,length(T)); varout36 = nan(1,length(T));
+varout37 = nan(1,length(T)); varout38 = nan(1,length(T)); varout39 = nan(1,length(T));
+
+
 
 
 for i=1:length(T)   
-[WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T(i), rc, pmaire);
+[LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T(i), rc, pmaire);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
 varout3(i)   = n_ciclo;    % Eficiencia energética ciclo
@@ -301,6 +309,9 @@ varout33(i) = In(1,3);     % Exergetic sustainability index (ESI)
 varout34(i) = Ytotal;     % Impacto ambiental total;
 varout35(i) = Ytotal_PEM; % GWP PEM respecto a total kgCO2eq/kgH2
 varout36(i) = n_ex_2;
+varout37(i) = LCOEn;
+varout38(i) = LCOH;
+varout39(i) = c_el_bus;
 end
 
 
@@ -313,7 +324,8 @@ resultados2 = [(T-273.15)', varout11', varout12', varout13', ...
     varout21', varout22', varout23', varout24', varout25', varout26', varout27', ...
     varout28', varout29', varout30'
 ];
-resultados3 = [(T-273.15)', varout31', varout32', varout33', varout34', varout35', varout36'
+resultados3 = [(T-273.15)', varout31', varout32', varout33', varout34', varout35',...
+    varout36', varout37', varout38', varout39'
     
 ];
 

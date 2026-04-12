@@ -1,4 +1,4 @@
-function[WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM]=SBCRV2(nt,nc,Thigh,rc,pmaire)
+function[LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM]=SBCRV2(nt,nc,Thigh,rc,pmaire)
 format long
 
 %ENTRADAS A LA FUNCIÓN-------------------------
@@ -32,7 +32,7 @@ format long
     T0 = 25 + 273.15;        % Temperatura ambiente (K)
     P0 = 101.325;            % Presión atmosférica (kPa) 
     Tlow = 55 + 273.15;      % Temp low (K)--> Guajira
-    m_CO2 = 1000;              % Flujo másico (kg/s)
+    m_CO2 = 1;              % Flujo másico (kg/s)
     eff = 0.95;              % Eficacia de los recuperadores (aprox para el punto 6)
     Nr = 40;                 % Nr = Número de segmentos para discretizar los intercambiadores
     r1 = rc;                 % Relación de presión1 --> r1 = Phigh/Plow (turbinas completas)
@@ -438,19 +438,21 @@ format long
     In(1,2)=EEF;
     In(1,3)=ESI;
     
-    [YCOPROD, Ytotal, Yco_total, Yde_total, Yom_total, Y_componentes, Ytotal_PEM,Yco_total_PEM, Yde_total_PEM, Yom_total_PEM] = EnvironmentalV22(W_t1/1000,W_t2/1000,W_t3/1000,W_c1/1000,W_c2/1000,W_b2/1000,Areas(1,1), Areas(1,2), Areas(1,5), Areas(1,3) ,Areas(1,4), Areas(1,6));
-    
-    
-
-% -------------------------------------------------------------------------
-% CALCULO EXERGOECONOMICO
     W1    = abs(W_t1)/1000;
     W2    = abs(W_t2)/1000;
     Wc1   = abs(W_c1)/1000;
     Wc2   = abs(W_c2)/1000;
     Wt3   = abs(W_t3)/1000;
     Wb2   = abs(W_b2)/1000;
-    W_PEM = W_Rankine/1000;          % TODO el trabajo neto disponible se envia a la PEM
+    W_PEM = W_Rankine/1000; 
+    
+    [YCOPROD, Ytotal, Yco_total, Yde_total, Yom_total, Y_componentes, Ytotal_PEM,Yco_total_PEM, Yde_total_PEM, Yom_total_PEM] = EnvironmentalV22(W1,W2,Wt3,Wc1,Wc2,Wb2,Areas(1,1), Areas(1,2), Areas(1,5), Areas(1,3) ,Areas(1,4), Areas(1,6));
+    
+    
+
+% -------------------------------------------------------------------------
+% CALCULO EXERGOECONOMICO
+         % TODO el trabajo neto disponible se envia a la PEM
 
     % Z--------------------------------------------------------------------
     % Actualización de costos por año

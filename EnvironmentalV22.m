@@ -39,9 +39,9 @@ M_T1 = a_turb * W_t1;
 M_T2 = a_turb * W_t2;
 M_T3 = a_turb * W_t3;
 
-M_C1 = a_pump * W_c1;
-M_C2 = a_pump * W_c2;
-M_B2 = a_pump * W_b2;
+M_C1 = a_pump * (-W_c1);
+M_C2 = a_pump * (-W_c2);
+M_B2 = a_pump * (-W_b2);
 
 % ------------------ FLUIDOS ------------------
 wf_c  = 5.57 * W_t3;
