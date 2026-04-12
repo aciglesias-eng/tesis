@@ -6,18 +6,6 @@ nt = 0.929;
 T = 900 + 273.15;
 pmaire=100; % EN PORCENTAJE
 
-varout1  = nan(1,length(T)); varout2  = nan(1,length(T)); varout3  = nan(1,length(T)); varout4  = nan(1,length(T));
-varout5  = nan(1,length(T)); varout6  = nan(1,length(T)); varout7  = nan(1,length(T)); varout8  = nan(1,length(T));
-varout9  = nan(1,length(T)); varout10 = nan(1,length(T)); varout11 = nan(1,length(T)); varout12 = nan(1,length(T));
-varout13 = nan(1,length(T)); varout14 = nan(1,length(T)); varout15 = nan(1,length(T)); varout16 = nan(1,length(T));
-varout17 = nan(1,length(T)); varout18 = nan(1,length(T)); varout19 = nan(1,length(T)); varout20 = nan(1,length(T));
-varout21 = nan(1,length(T)); varout22 = nan(1,length(T)); varout23 = nan(1,length(T)); varout24 = nan(1,length(T));
-varout25 = nan(1,length(T)); varout26 = nan(1,length(T)); varout27 = nan(1,length(T)); varout28 = nan(1,length(T));
-varout29 = nan(1,length(T)); varout30 = nan(1,length(T)); varout31 = nan(1,length(T)); varout32 = nan(1,length(T));
-varout33 = nan(1,length(T)); varout34 = nan(1,length(T)); varout35 = nan(1,length(T)); varout36 = nan(1,length(T));
-varout37 = nan(1,length(T)); varout38 = nan(1,length(T)); varout39 = nan(1,length(T));
-
-
 
 for i=1:length(rc)   
 [LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T, rc(i), pmaire);
@@ -59,6 +47,10 @@ varout33(i) = In(1,3);     % Exergetic sustainability index (ESI)
 varout34(i) = Ytotal;     % Impacto ambiental total;
 varout35(i) = Ytotal_PEM; % GWP PEM respecto a total kgCO2eq/kgH2
 varout36(i) = n_ex_2;
+
+varout37(i) = LCOEn;
+varout38(i) = LCOH;
+varout39(i) = c_el_bus;
 end
 
 
@@ -73,6 +65,7 @@ resultados2 = [(rc)', varout11', varout12', varout13', ...
 ];
 resultados3 = [(rc)', varout31', varout32', varout33', varout34', varout35',...
     varout36', varout37', varout38', varout39'
+    ];
 
 
 
@@ -87,18 +80,6 @@ nc = 0.89;
 T = 900 + 273.15;
 rc = 2.74;
 pmaire=100; % EN PORCENTAJE
-
-varout1  = nan(1,length(T)); varout2  = nan(1,length(T)); varout3  = nan(1,length(T)); varout4  = nan(1,length(T));
-varout5  = nan(1,length(T)); varout6  = nan(1,length(T)); varout7  = nan(1,length(T)); varout8  = nan(1,length(T));
-varout9  = nan(1,length(T)); varout10 = nan(1,length(T)); varout11 = nan(1,length(T)); varout12 = nan(1,length(T));
-varout13 = nan(1,length(T)); varout14 = nan(1,length(T)); varout15 = nan(1,length(T)); varout16 = nan(1,length(T));
-varout17 = nan(1,length(T)); varout18 = nan(1,length(T)); varout19 = nan(1,length(T)); varout20 = nan(1,length(T));
-varout21 = nan(1,length(T)); varout22 = nan(1,length(T)); varout23 = nan(1,length(T)); varout24 = nan(1,length(T));
-varout25 = nan(1,length(T)); varout26 = nan(1,length(T)); varout27 = nan(1,length(T)); varout28 = nan(1,length(T));
-varout29 = nan(1,length(T)); varout30 = nan(1,length(T)); varout31 = nan(1,length(T)); varout32 = nan(1,length(T));
-varout33 = nan(1,length(T)); varout34 = nan(1,length(T)); varout35 = nan(1,length(T)); varout36 = nan(1,length(T));
-varout37 = nan(1,length(T)); varout38 = nan(1,length(T)); varout39 = nan(1,length(T));
-
 
 
 for i=1:length(nt)   
@@ -141,6 +122,10 @@ varout33(i) = In(1,3);     % Exergetic sustainability index (ESI)
 varout34(i) = Ytotal;     % Impacto ambiental total;
 varout35(i) = Ytotal_PEM; % GWP PEM respecto a total kgCO2eq/kgH2
 varout36(i) = n_ex_2;
+
+varout37(i) = LCOEn;
+varout38(i) = LCOH;
+varout39(i) = c_el_bus;
 end
 
 
@@ -172,16 +157,6 @@ T = 900 + 273.15;
 rc = 2.74;
 pmaire=1; % EN PORCENTAJE
 
-varout1  = nan(1,length(T)); varout2  = nan(1,length(T)); varout3  = nan(1,length(T)); varout4  = nan(1,length(T));
-varout5  = nan(1,length(T)); varout6  = nan(1,length(T)); varout7  = nan(1,length(T)); varout8  = nan(1,length(T));
-varout9  = nan(1,length(T)); varout10 = nan(1,length(T)); varout11 = nan(1,length(T)); varout12 = nan(1,length(T));
-varout13 = nan(1,length(T)); varout14 = nan(1,length(T)); varout15 = nan(1,length(T)); varout16 = nan(1,length(T));
-varout17 = nan(1,length(T)); varout18 = nan(1,length(T)); varout19 = nan(1,length(T)); varout20 = nan(1,length(T));
-varout21 = nan(1,length(T)); varout22 = nan(1,length(T)); varout23 = nan(1,length(T)); varout24 = nan(1,length(T));
-varout25 = nan(1,length(T)); varout26 = nan(1,length(T)); varout27 = nan(1,length(T)); varout28 = nan(1,length(T));
-varout29 = nan(1,length(T)); varout30 = nan(1,length(T)); varout31 = nan(1,length(T)); varout32 = nan(1,length(T));
-varout33 = nan(1,length(T)); varout34 = nan(1,length(T)); varout35 = nan(1,length(T)); varout36 = nan(1,length(T));
-varout37 = nan(1,length(T)); varout38 = nan(1,length(T)); varout39 = nan(1,length(T));
 
 
 
@@ -225,6 +200,10 @@ varout33(i) = In(1,3);     % Exergetic sustainability index (ESI)
 varout34(i) = Ytotal;     % Impacto ambiental total;
 varout35(i) = Ytotal_PEM; % GWP PEM respecto a total kgCO2eq/kgH2
 varout36(i) = n_ex_2;
+
+varout37(i) = LCOEn;
+varout38(i) = LCOH;
+varout39(i) = c_el_bus;
 end
 
 
@@ -254,19 +233,6 @@ nc=0.89;
 nt=0.929;
 rc=2.74;
 pmaire=100; % EN PORCENTAJE
-
-varout1  = nan(1,length(T)); varout2  = nan(1,length(T)); varout3  = nan(1,length(T)); varout4  = nan(1,length(T));
-varout5  = nan(1,length(T)); varout6  = nan(1,length(T)); varout7  = nan(1,length(T)); varout8  = nan(1,length(T));
-varout9  = nan(1,length(T)); varout10 = nan(1,length(T)); varout11 = nan(1,length(T)); varout12 = nan(1,length(T));
-varout13 = nan(1,length(T)); varout14 = nan(1,length(T)); varout15 = nan(1,length(T)); varout16 = nan(1,length(T));
-varout17 = nan(1,length(T)); varout18 = nan(1,length(T)); varout19 = nan(1,length(T)); varout20 = nan(1,length(T));
-varout21 = nan(1,length(T)); varout22 = nan(1,length(T)); varout23 = nan(1,length(T)); varout24 = nan(1,length(T));
-varout25 = nan(1,length(T)); varout26 = nan(1,length(T)); varout27 = nan(1,length(T)); varout28 = nan(1,length(T));
-varout29 = nan(1,length(T)); varout30 = nan(1,length(T)); varout31 = nan(1,length(T)); varout32 = nan(1,length(T));
-varout33 = nan(1,length(T)); varout34 = nan(1,length(T)); varout35 = nan(1,length(T)); varout36 = nan(1,length(T));
-varout37 = nan(1,length(T)); varout38 = nan(1,length(T)); varout39 = nan(1,length(T));
-
-
 
 
 for i=1:length(T)   
