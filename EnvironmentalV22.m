@@ -21,27 +21,27 @@ mu_CO2_mass     = 1.0;  % [kgCO2-eq/kg]
 
 % ------------------ POTENCIA NETA Y ENERGIA------------------
 % Convención física: turbinas producen (+), compresores/bombas consumen (-)
-WNETO  = (W_t1 + W_t2 + W_t3) + (W_c1 + W_c2 + W_b2); % [kW]
+WNETO  = (W_t1 + W_t2 + W_t3) - (W_c1 + W_c2 + W_b2); % [kW]
 E_util = WNETO * horas * years * disponibilidad;      % [kWh_e]
 
 % ------------------ MASA EQUIVALENTE EQUIPOS ------------------
 a_turb = 35.03;  % [kg/kW]
 a_pump = 15.71;  % [kg/kW]
 
-M_Evap   = A_evap   * delta * rho;
-M_Cond   = A_cond   * delta * rho;
-M_HTR    = A_HTR    * delta * rho;
-M_LTR    = A_LTR    * delta * rho;
-M_Cooler = A_cooler * delta * rho;
-M_HE     = A_HE     * delta * rho;
+M_Evap   = abs(A_evap   * delta * rho);
+M_Cond   = abs(A_cond   * delta * rho);
+M_HTR    = abs(A_HTR    * delta * rho);
+M_LTR    = abs(A_LTR    * delta * rho);
+M_Cooler = abs(A_cooler * delta * rho);
+M_HE     = abs(A_HE     * delta * rho);
 
 M_T1 = a_turb * W_t1;
 M_T2 = a_turb * W_t2;
 M_T3 = a_turb * W_t3;
 
-M_C1 = a_pump * (-W_c1);
-M_C2 = a_pump * (-W_c2);
-M_B2 = a_pump * (-W_b2);
+M_C1 = a_pump * abs(W_c1);
+M_C2 = a_pump * abs(W_c2);
+M_B2 = a_pump * abs(W_b2);
 
 % ------------------ FLUIDOS ------------------
 wf_c  = 5.57 * W_t3;
@@ -77,25 +77,25 @@ co2_de = (co2_c - co2_op) * 0.03;
                 +Yde.T2+Yde.T3+Yde.C1+Yde.C2+Yde.B2+Yde.wf+Yde.co2+Yde.CSP; %
 %--------------------------------------------------------------------------
 % Comisionamiento
-    Yco.Evap   = mu_eq_mass*M_Evap+Yde.Evap;
-    Yco.Cond   = mu_eq_mass*M_Cond+Yde.Cond;
-    Yco.HTR    = mu_eq_mass*M_HTR+Yde.HTR;
-    Yco.LTR    = mu_eq_mass*M_LTR+Yde.LTR;
-    Yco.Cooler = mu_eq_mass*M_Cooler+Yde.Cooler;
-    Yco.HE     = mu_eq_mass*M_HE+Yde.HE;
+    Yco.Evap   = mu_eq_mass*M_Evap;
+    Yco.Cond   = mu_eq_mass*M_Cond;
+    Yco.HTR    = mu_eq_mass*M_HTR;
+    Yco.LTR    = mu_eq_mass*M_LTR;
+    Yco.Cooler = mu_eq_mass*M_Cooler;
+    Yco.HE     = mu_eq_mass*M_HE;
 
-    Yco.T1     = mu_eq_mass*M_T1+Yde.T1;
-    Yco.T2     = mu_eq_mass*M_T2+Yde.T2;
-    Yco.T3     = mu_eq_mass*M_T3+Yde.T3;
+    Yco.T1     = mu_eq_mass*M_T1;
+    Yco.T2     = mu_eq_mass*M_T2;
+    Yco.T3     = mu_eq_mass*M_T3;
 
-    Yco.C1     = mu_eq_mass*M_C1+Yde.C1;
-    Yco.C2     = mu_eq_mass*M_C2+Yde.C2;
-    Yco.B2     = mu_eq_mass*M_B2+Yde.B2;
+    Yco.C1     = mu_eq_mass*M_C1;
+    Yco.C2     = mu_eq_mass*M_C2;
+    Yco.B2     = mu_eq_mass*M_B2;
 
-    Yco.wf     = mu_tolueno_mass*wf_c+Yde.wf;
-    Yco.co2    = mu_CO2_mass*co2_c+Yde.co2;
+    Yco.wf     = mu_tolueno_mass*wf_c;
+    Yco.co2    = mu_CO2_mass*co2_c+2;
 
-    Yco.CSP    = mu_CSP*E_util+Yde.CSP;
+    Yco.CSP    = mu_CSP*E_util;
 
     Yco_block  = Yco.Evap+Yco.HE+Yco.Cond+Yco.HTR+Yco.LTR+Yco.Cooler+Yco.T1...
                 +Yco.T2+Yco.T3+Yco.C1+Yco.C2+Yco.B2+Yco.wf+Yco.co2+Yco.CSP; %
@@ -106,7 +106,7 @@ co2_de = (co2_c - co2_op) * 0.03;
     Yom.HTR    = 0;
     Yom.LTR    = 0;
     Yom.Cooler = 0;
-    Yom.HE  = 0;
+    Yom.HE     = 0;
 
     Yom.T1     = 0;
     Yom.T2     = 0;
@@ -151,9 +151,9 @@ GWP_elec = (Yco_block + Yom_block + Yde_block)/E_util; % [kgCO2-eq/kWh_e]
 [Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM]= PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas);
 Y_PEME = Yom_total_PEM+Yde_total_PEM+Yco_total_PEM;
 % ------------------ TOTALES SISTEMA COMPLETO ------------------
-Yco_total = Yco_block + Yco.CSP;
-Yde_total = Yde_block + Yde.CSP;
-Yom_total = Yom_block + Yom.CSP;
+Yco_total = Yco_block;
+Yde_total = Yde_block;
+Yom_total = Yom_block;
 
 
 

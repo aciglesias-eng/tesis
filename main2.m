@@ -1,3 +1,4 @@
+%{
 %% 
 clear%;clc
 rc = [2.50 2.70 2.90 3.10 3.30 3.50];
@@ -223,8 +224,9 @@ resultados3 = [(nc)', varout31', varout32', varout33', varout34', varout35',...
 
 
 xlswrite('Salidas.xlsx',resultados ,'nc','B3')
-xlswrite('Salidas.xlsx',resultados2 ,'nc','B16')
+xlswrite('Salidas.xlsx',resultados2 ,'nc','B16')    
 xlswrite('Salidas.xlsx',resultados3 ,'nc','B29')
+%}
 
 %%
 clear%;clc

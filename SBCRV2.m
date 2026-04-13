@@ -158,7 +158,7 @@ format long
     
 % Punto 6AO1/ACOPLE CON ORC
         P6AO1 = P6AI;
-        [T6AO3,A_ORC,W_t3,W_b2,Xd_orc,TPhsmx_orc,Q_cond_vec,Q_evap_vec]=ORCV2(T6AI,P6AO1,m_CO2*splitA);
+        [T6AO3,A_ORC,W_t3,W_b2,Xd_orc,TPhsmx_orc,Q_cond_vec,Q_evap_vec]=ORCV2(T6AI,P6AO1,m_CO2*splitA,'RORC', 0.85);
         T6AO1 = TPhsmx_orc(12,1);
         h6AO1 = TPhsmx_orc(12,3); s6AO1 = TPhsmx_orc(12,4);
         x6AO1 = TPhsmx_orc(12,6);
