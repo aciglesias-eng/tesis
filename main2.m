@@ -235,7 +235,7 @@ nc=0.89;
 nt=0.929;
 rc=2.74;
 pmaire=100; % EN PORCENTAJE
-
+%1
 
 for i=1:length(T)   
     display(i);
