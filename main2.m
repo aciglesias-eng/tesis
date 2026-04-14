@@ -238,6 +238,7 @@ pmaire=100; % EN PORCENTAJE
 
 
 for i=1:length(T)   
+    display(i);
 [LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T(i), rc, pmaire);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
@@ -268,7 +269,7 @@ varout26(i)  = XD(1,16);   % Perdida en el agua
 varout27(i)  = XD(1,17);   % Destruida HE
 varout28(i)  = XD(1,18);   % Exergia aportada por el sistema solar
 varout29(i)  = XD(1,19);   % Exergia destruida PEM
-varout30(i)  = XD(1,20);   % Exergia destruida total
+varout30(i)  = XD(1,20);   % Exergia destruida regenerador
 
 varout31(i) = In(1,1);     % Exergy waste ratio EWR
 varout32(i) = In(1,2);     % Environmental effect factor (EEF)
@@ -280,6 +281,7 @@ varout36(i) = n_ex_2;
 varout37(i) = LCOEn;
 varout38(i) = LCOH;
 varout39(i) = c_el_bus;
+varout40(i) = XD(1,21);   % Exergia destruida total
 end
 
 

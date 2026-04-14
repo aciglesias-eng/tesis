@@ -76,7 +76,7 @@ co2_de = (co2_c - co2_op) * 0.03;
     Yde.CSP    = peed*(E_util*mu_CSP);
    
     Yde_block  = Yde.Evap+Yde.HE+Yde.Cond+Yde.HTR+Yde.LTR+Yde.Cooler+Yde.T1...
-                +Yde.T2+Yde.T3+Yde.C1+Yde.C2+Yde.B2+Yde.wf+Yde.co2+Yde.CSP+Yde.regen; %
+                +Yde.T2+Yde.T3+Yde.C1+Yde.C2+Yde.B2+Yde.wf+Yde.co2+Yde.CSP; %
 %--------------------------------------------------------------------------
 % Comisionamiento
     Yco.Evap   = mu_eq_mass*M_Evap;
@@ -101,7 +101,7 @@ co2_de = (co2_c - co2_op) * 0.03;
     Yco.CSP    = mu_CSP*E_util;
 
     Yco_block  = Yco.Evap+Yco.HE+Yco.Cond+Yco.HTR+Yco.LTR+Yco.Cooler+Yco.T1...
-                +Yco.T2+Yco.T3+Yco.C1+Yco.C2+Yco.B2+Yco.wf+Yco.co2+Yco.CSP+Yco.regen; %
+                +Yco.T2+Yco.T3+Yco.C1+Yco.C2+Yco.B2+Yco.wf+Yco.co2+Yco.CSP; %
 %--------------------------------------------------------------------------
 % Operación y mantenimiento
     Yom.Evap   = 0;
@@ -110,7 +110,7 @@ co2_de = (co2_c - co2_op) * 0.03;
     Yom.LTR    = 0;
     Yom.Cooler = 0;
     Yom.HE     = 0;
-    Yom.regen  = 0;
+    Yom.regen  = peed*mu_eq_mass*M_regen;
     
     Yom.T1     = 0;
     Yom.T2     = 0;
@@ -134,8 +134,7 @@ co2_de = (co2_c - co2_op) * 0.03;
     Y.LTR    = Yco.LTR    + Yde.LTR    + Yom.LTR;
     Y.Cooler = Yco.Cooler + Yde.Cooler + Yom.Cooler;
     Y.HE     = Yco.HE  + Yde.HE  + Yom.HE;
-    Y.regen  = Yco.regen + Yde.regen + Yom.regen; 
-    
+
     Y.T1     = Yco.T1 + Yde.T1 + Yom.T1;
     Y.T2     = Yco.T2 + Yde.T2 + Yom.T2;
     Y.T3     = Yco.T3 + Yde.T3 + Yom.T3;
@@ -163,9 +162,9 @@ Yom_total = Yom_block;
 
 
 Y_componentes = [Y.Evap,Y.Cond,Y.HTR,Y.LTR,Y.Cooler,Y.HE,Y.T1,Y.T2,Y.T3, ...
-                 Y.C1,Y.C2,Y.B2,Y.wf,Y.co2,Y.CSP,Y_PEME,Y.regen];
+                 Y.C1,Y.C2,Y.B2,Y.wf,Y.co2,Y.CSP,Y_PEME];
 YCOPROD = Y.Evap+Y.Cond+Y.HTR+Y.LTR+Y.Cooler+Y.HE+Y.T1+Y.T2+Y.T3+ ...
-                 Y.C1+Y.C2+Y.B2+Y.wf+Y.co2+Y.CSP+Y_PEME+Y.regen;
+                 Y.C1+Y.C2+Y.B2+Y.wf+Y.co2+Y.CSP+Y_PEME;
              
 end
 

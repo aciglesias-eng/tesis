@@ -32,7 +32,7 @@ format long
     T0 = 25 + 273.15;        % Temperatura ambiente (K)
     P0 = 101.325;            % Presión atmosférica (kPa) 
     Tlow = 55 + 273.15;      % Temp low (K)--> Guajira
-    m_CO2 = 1;              % Flujo másico (kg/s)
+    m_CO2 = 1000;              % Flujo másico (kg/s)
     eff = 0.95;              % Eficacia de los recuperadores (aprox para el punto 6)
     Nr = 40;                 % Nr = Número de segmentos para discretizar los intercambiadores
     r1 = rc;                 % Relación de presión1 --> r1 = Phigh/Plow (turbinas completas)
@@ -46,6 +46,9 @@ format long
     interes = 0.12;
     years = 20;
     gamma = 0.06;
+    tipo_bottoming = 'RORC';   % 'ORC' o 'RORC'
+    eta_regen_orc  = 0.85;     % solo aplica si tipo_bottoming = 'RORC'
+    
     HX = [460,160,336,125,5; % Librería de datos de intercambiadores de calor
         799,160,675,150,12;
         837,310,590,200,28;
@@ -154,25 +157,29 @@ format long
             splitB = 1-splitA ;
             
 % --------------------------------------------------------------------------------------------------------------------------------------------------
-%---------------------------------------------------------------------         
+%---------------------------------------------------------------------    
+    % Punto 6AO1 / ACOPLE CON ORC-RORC
+    P6AO1 = P6AI;
+    [T6AO3,A_ORC,W_t3,W_b2,Xd_orc,TPhsmx_orc,Q_cond_vec,Q_evap_vec,Q_regen] = ...
+        ORCV2(T6AI,P6AO1,m_CO2*splitA,tipo_bottoming,eta_regen_orc);
+    T6AO1 = TPhsmx_orc(14,1);
+    h6AO1 = TPhsmx_orc(14,3)*1000;
+    s6AO1 = TPhsmx_orc(14,4)*1000;
+    x6AO1 = TPhsmx_orc(14,6)*1000;
     
-% Punto 6AO1/ACOPLE CON ORC
-        P6AO1 = P6AI;
-        [T6AO3,A_ORC,W_t3,W_b2,Xd_orc,TPhsmx_orc,Q_cond_vec,Q_evap_vec]=ORCV2(T6AI,P6AO1,m_CO2*splitA,'RORC', 0.85);
-        T6AO1 = TPhsmx_orc(12,1);
-        h6AO1 = TPhsmx_orc(12,3); s6AO1 = TPhsmx_orc(12,4);
-        x6AO1 = TPhsmx_orc(12,6);
-        
-     % Punto 6AO2/ACOPLE CON ORC
-        T6AO2 = TPhsmx_orc(13,1);P6AO2 = P6AI;
-        h6AO2 = TPhsmx_orc(13,3); s6AO2 = TPhsmx_orc(13,4);
-        x6AO2 = TPhsmx_orc(13,6);
-        
-     % Punto 6AO3/ACOPLE CON ORC
-        P6AO3 = P6AI;
-        h6AO3 = TPhsmx_orc(14,3); s6AO3 = TPhsmx_orc(14,4);
-        x6AO3 = TPhsmx_orc(14,6);      
-        
+    % Punto 6AO2 / ACOPLE CON ORC-RORC
+    T6AO2 = TPhsmx_orc(15,1); 
+    P6AO2 = P6AI;
+    h6AO2 = TPhsmx_orc(15,3)*1000;
+    s6AO2 = TPhsmx_orc(15,4)*1000;
+    x6AO2 = TPhsmx_orc(15,6)*1000;
+    
+    % Punto 6AO3 / ACOPLE CON ORC-RORC
+    P6AO3 = P6AI;
+    h6AO3 = TPhsmx_orc(16,3)*1000;
+    s6AO3 = TPhsmx_orc(16,4)*1000;
+    x6AO3 = TPhsmx_orc(16,6)*1000;
+    
     % Punto 6BI
         T6BI = T6; P6BI = P6;
         h6BI = h6; s6BI = s6;
@@ -357,26 +364,28 @@ format long
         XD(1,10) = Xd_sr/1000;          % Destruida Re_Heater 
         XD(1,11) = Xd_cooler/1000;      % Destruida cooler
         XD(1,12) = x_loss_cooler/1000;  % Perdida en el aire
-        XD(1,13) = Xd_orc(4)/1000;      % Destruida evaporador
-        XD(1,14) = Xd_orc(3)/1000;      % Destruida condensador
+        XD(1,13) = Xd_orc(5)/1000;      % Destruida evaporador
+        XD(1,14) = Xd_orc(4)/1000;      % Destruida condensador
         XD(1,15) = Xd_orc(1)/1000;      % Destruida pump 2
-        XD(1,16) = Xd_orc(5)/1000;      % Loss en el agua
+        XD(1,16) = Xd_orc(6)/1000;      % Loss en el agua
         XD(1,17) = Xd_PEM_TOT(1)/1000;  % Destruida HE
         XD(1,18) = X_solar/1000;        % Exergia aportada por el sistema solar
         XD(1,19) = Xd_PEM_TOT(4);       % Exergía destruida por la PEM
+        XD(1,20) = Xd_orc(3)/1000;      % Regenerador
         Xd_total = sum(XD(1,1:19));  
-        XD(1,20) = Xd_total-X_solar/1000;% Exergia destruida total
+        XD(1,21) = Xd_total-X_solar/1000;% Exergia destruida total
         
         % Eficiencia exergética ------------------------
-            n_ex_2 = (1-(XD(1,20)/(X_solar/1000)))*100;   
+            n_ex_2 = (1-(XD(1,21)/(X_solar/1000)))*100;   
             
     % Áreas de los intercambiadores
         Areas(1,1) = A_HTR;          % Área HTR     
         Areas(1,2) = A_LTR;          % Área LTR
         Areas(1,3) = A_ORC(1);       % Área Evaporador 
-        Areas(1,4) = A_ORC(2);       % Área Condensador
+        Areas(1,4) = A_ORC(3);       % Área Condensador
         Areas(1,5) = A_cooler;       % Área Cooler
         Areas(1,6) = A_HE;           % Área Heat Exchanger
+        Areas(1,7) = A_ORC(2);       % Área Regenerador
         
     % Calor
         Calor(1,1) = Q_heater/1000000;      % +Calor Heater      
@@ -393,6 +402,7 @@ format long
         Calor(1,12) = Q_cond_vec(3)/1000000;% +Calor recibido total condensador
         Calor(1,13) = Q_cooler/1000000;     % +Calor recibido cooler
         Calor(1,14) = Q_HE/1000000;         % -Calor cedido HE 
+        Calor(1,15) = Q_regen/1000000;
     
     % Propiedades BRAYTON
         T = [T1,T2,T3,T4,T5,T6,T6AI,T6AO1,T6AO2,T6AO3,T6AO,T6BI,T7,T8,T9,T10,T11,T12];      % Temperaturas
@@ -430,7 +440,7 @@ format long
         
 % -------------------------------------------------------------------------
 % CALCULO AMBIENTAL -------------------------------------------------------
-    EWR = XD(1,20)*1000/(X_solar);   % Exergy waste ratio EWR
+    EWR = XD(1,21)*1000/(X_solar);   % Exergy waste ratio EWR
     EEF = EWR/(n_ex/100);       % Environmental effect factor (EEF)
     ESI = 1/EEF;                % Exergetic sustainability index (ESI)
 
@@ -438,31 +448,32 @@ format long
     In(1,2)=EEF;
     In(1,3)=ESI;
     
+% -------------------------------------------------------------------------
+% CALCULO EXERGOECONOMICO
+
+    % Potencias en kW
     W1    = abs(W_t1)/1000;
     W2    = abs(W_t2)/1000;
     Wc1   = abs(W_c1)/1000;
     Wc2   = abs(W_c2)/1000;
     Wt3   = abs(W_t3)/1000;
     Wb2   = abs(W_b2)/1000;
-    W_PEM = W_Rankine/1000; 
+    W_PEM = abs(W_Rankine)/1000;
     
-    [YCOPROD, Ytotal, Yco_total, Yde_total, Yom_total, Y_componentes, Ytotal_PEM,Yco_total_PEM, Yde_total_PEM, Yom_total_PEM] = EnvironmentalV22(W1,W2,Wt3,Wc1,Wc2,Wb2,Areas(1,1), Areas(1,2), Areas(1,5), Areas(1,3) ,Areas(1,4), Areas(1,6));
-    
-    
-
+    [YCOPROD, Ytotal, Yco_total, Yde_total, Yom_total, Y_componentes,...
+        Ytotal_PEM,Yco_total_PEM, Yde_total_PEM, Yom_total_PEM] = ...
+        EnvironmentalV22(W1,W2,Wt3,Wc1,Wc2,Wb2,Areas(1,1), Areas(1,2),...
+        Areas(1,5), Areas(1,3) ,Areas(1,4), Areas(1,6), Areas(1,7));
 % -------------------------------------------------------------------------
 % CALCULO EXERGOECONOMICO
-         % TODO el trabajo neto disponible se envia a la PEM
 
-    % Z--------------------------------------------------------------------
-    % Actualización de costos por año
     CEPCI_2022 = 816;
-    F_TC   = CEPCI_2022/381.7; 
-    F_HXC  = CEPCI_2022/318.4;  
-    F_HXS  = CEPCI_2022/575.5; 
-    F_T3   = CEPCI_2022/584.6;  
-    F_PUMP = CEPCI_2022/468.2;  
-    F_PEM  = CEPCI_2022/368.1;  
+    F_TC   = CEPCI_2022/381.7;
+    F_HXC  = CEPCI_2022/318.4;
+    F_HXS  = CEPCI_2022/575.5;
+    F_T3   = CEPCI_2022/584.6;
+    F_PUMP = CEPCI_2022/468.2;
+    F_PEM  = CEPCI_2022/368.1;
 
     Z_t1       = F_TC  * 479.34*m_CO2*(1/(0.93-nt))*log(r1)*(1+exp(0.036*T1-54.4));
     Z_t2       = F_TC  * 479.34*m_CO2*(1/(0.93-nt))*log(r2)*(1+exp(0.036*T3-54.4));
@@ -470,37 +481,41 @@ format long
     Z_c2       = F_TC  * 71.1*m_CO2*splitB*(1/(0.92-nc))*r1*log(r1);
     Z_HTR      = F_HXC * 2681*(A_HTR^0.59);
     Z_LTR      = F_HXC * 2681*(A_LTR^0.59);
-    Z_ORC_EVAP = F_HXC * 2681*(A_ORC(1)^0.59);
-    Z_t3       = F_T3  * 4405*(Wt3^0.7);
-    Z_b2       = F_PUMP* 1120*(Wb2^0.8);
-    Z_ORC_COND = F_HXS * 2143*(A_ORC(2)^0.514);
+
+    Z_ORC_EVAP  = F_HXC * 2681*(A_ORC(1)^0.59);
+    Z_ORC_REGEN = F_HXC * 2681*(A_ORC(2)^0.59);
+    Z_t3        = F_T3  * 4405*(Wt3^0.7);
+    Z_b2        = F_PUMP * 1120*(Wb2^0.8);
+    Z_ORC_COND  = F_HXS * 2143*(A_ORC(3)^0.514);
+
     Z_COOLER   = F_HXS * 2143*(A_cooler^0.514);
     Z_HE       = F_HXS * 2143*(A_HE^0.514);
     Z_PEM      = F_PEM * 1000*W_PEM;
 
-    % Tasa de costo de inversión [USD/h] ----------------------------------
+    % Tasa de costo de inversion [USD/h]
     CRF = (interes*(1+interes)^years)/((1+interes)^years - 1);
     f_Z = (CRF + gamma)/tao;
 
-    Zdot_t1       = Z_t1*f_Z;
-    Zdot_t2       = Z_t2*f_Z;
-    Zdot_c1       = Z_c1*f_Z;
-    Zdot_c2       = Z_c2*f_Z;
-    Zdot_HTR      = Z_HTR*f_Z;
-    Zdot_LTR      = Z_LTR*f_Z;
-    Zdot_ORC_EVAP = Z_ORC_EVAP*f_Z;
-    Zdot_t3       = Z_t3*f_Z;
-    Zdot_b2       = Z_b2*f_Z;
-    Zdot_ORC_COND = Z_ORC_COND*f_Z;
-    Zdot_COOLER   = Z_COOLER*f_Z;
-    Zdot_HE       = Z_HE*f_Z;
-    Zdot_PEM      = Z_PEM*f_Z;
+    Zdot_t1        = Z_t1*f_Z;
+    Zdot_t2        = Z_t2*f_Z;
+    Zdot_c1        = Z_c1*f_Z;
+    Zdot_c2        = Z_c2*f_Z;
+    Zdot_HTR       = Z_HTR*f_Z;
+    Zdot_LTR       = Z_LTR*f_Z;
+    Zdot_ORC_EVAP  = Z_ORC_EVAP*f_Z;
+    Zdot_ORC_REGEN = Z_ORC_REGEN*f_Z;
+    Zdot_t3        = Z_t3*f_Z;
+    Zdot_b2        = Z_b2*f_Z;
+    Zdot_ORC_COND  = Z_ORC_COND*f_Z;
+    Zdot_COOLER    = Z_COOLER*f_Z;
+    Zdot_HE        = Z_HE*f_Z;
+    Zdot_PEM       = Z_PEM*f_Z;
 
-    % Costos unitarios ----------------------------------------------------
-    c_solar = 0.02;   % USD/kWh_ex 
+    % Costos unitarios externos
+    c_solar = 0.02;   % USD/kWh_ex
     c_water = 0.002;  % USD/kWh_ex
 
-    % Exergias de corrientes [kW] -----------------------------------------
+    % Exergias de corrientes [kW]
     E1    = (m_CO2*x1)/1000;
     E2    = (m_CO2*x2)/1000;
     E3    = (m_CO2*x3)/1000;
@@ -516,36 +531,40 @@ format long
     E6BI  = (m_CO2*splitB*x6BI)/1000;
     E6AI  = (m_CO2*splitA*x6AI)/1000;
     E6AO3 = (m_CO2*splitA*x6AO3)/1000;
-    E6AO  =  m_CO2*splitA*TPhsmx_cooler(4,6);   % kW
-    E19   =  m_H2O_in*TPhsmx_PEM(3,6);          % kW
-    E20   =  m_H2O_in*TPhsmx_PEM(4,6);          % kW
-    E15   = TPhsmx_orc(5,5)*TPhsmx_orc(5,6);
-    E16   = TPhsmx_orc(6,5)*TPhsmx_orc(6,6);
-    E17   = TPhsmx_orc(1,5)*TPhsmx_orc(1,6);
-    E18   = TPhsmx_orc(2,5)*TPhsmx_orc(2,6);
+    E6AO  =  m_CO2*splitA*TPhsmx_cooler(4,6);
+    E19   =  m_H2O_in*TPhsmx_PEM(3,6);
+    E20   =  m_H2O_in*TPhsmx_PEM(4,6);
 
-    EH2   = Xd_PEM_TOT(2);   % kW
-    EO2   = Xd_PEM_TOT(5);   % kW
+    EH2   = Xd_PEM_TOT(2);
+    EO2   = Xd_PEM_TOT(5);
+    E_orc = TPhsmx_orc(:,5).*TPhsmx_orc(:,6);   % [kW]
+    E17  = E_orc(1);
+    E18  = E_orc(2);
+    E18r = E_orc(3);
+    E15  = E_orc(6);
+    E16  = E_orc(7);
+    E16r = E_orc(8);
 
     names = {'c1','c2','c3','c4','c5','c6','c7','c8','c9','c10','c11','c12', ...
-             'c6BI','c6AI','c6AO3','c6AO','c19','c20','c15','c16','c17','c18', ...
-             'cH2','cO2','cel'};
+             'c6BI','c6AI','c6AO3','c6AO','c19','c20', ...
+             'c15','c16','c16r','c17','c18','c18r','cH2','cO2','cel'};
+
     n = numel(names);
     idx = containers.Map(names,1:n);
     A = zeros(n,n);
     b = zeros(n,1);
 
-    % (1) Heater solar
+    % (1) Heater solar: C1 - C12 = csolar(E1-E12)
     A(1,idx('c1'))  =  E1;
     A(1,idx('c12')) = -E12;
     b(1) = c_solar*(E1 - E12);
 
-    % (2) Reheater solar
+    % (2) Reheater solar: C3 - C2 = csolar(E3-E2)
     A(2,idx('c3')) =  E3;
     A(2,idx('c2')) = -E2;
     b(2) = c_solar*(E3 - E2);
 
-    % (3) Electricidad común: T1 + T2 + T3
+    % (3) Bus electrico comun de turbinas
     A(3,idx('c2'))  =  E2;
     A(3,idx('c1'))  = -E1;
     A(3,idx('c4'))  =  E4;
@@ -555,7 +574,7 @@ format long
     A(3,idx('cel')) =  (W1 + W2 + Wt3);
     b(3) = Zdot_t1 + Zdot_t2 + Zdot_t3;
 
-    % Reglas turbinas
+    % (4)-(6) Igualdad de costos unitarios a traves de las turbinas
     A(4,idx('c1'))  = 1;  A(4,idx('c2'))  = -1;  b(4) = 0;
     A(5,idx('c3'))  = 1;  A(5,idx('c4'))  = -1;  b(5) = 0;
     A(6,idx('c15')) = 1;  A(6,idx('c16')) = -1;  b(6) = 0;
@@ -572,7 +591,7 @@ format long
     A(8,idx('cel')) = -Wc2;
     b(8) = Zdot_c2;
 
-    % (9) Bomba ORC
+    % (9) Bomba ORC/RORC
     A(9,idx('c18')) =  E18;
     A(9,idx('c17')) = -E17;
     A(9,idx('cel')) = -Wb2;
@@ -592,103 +611,127 @@ format long
     A(11,idx('c8')) = -E8;
     b(11) = Zdot_LTR;
 
-    % (12) Evaporador ORC (acople CO2-ORC)
-    A(12,idx('c6AO3')) =  E6AO3;
-    A(12,idx('c15'))   =  E15;
-    A(12,idx('c6AI'))  = -E6AI;
-    A(12,idx('c18'))   = -E18;
-    b(12) = Zdot_ORC_EVAP;
+    % (12) Regenerador RORC
+    A(12,idx('c16r')) =  E16r;
+    A(12,idx('c18r')) =  E18r;
+    A(12,idx('c16'))  = -E16;
+    A(12,idx('c18'))  = -E18;
+    b(12) = Zdot_ORC_REGEN;
 
-    % (13) PEM
-    % C_H2O,out = C_20, el costo del agua se cancela en la PEM.
-    % La PEM carga costo al H2 a partir del trabajo electrico consumido.
-    A(13,idx('cH2')) =  EH2;
-    A(13,idx('cO2')) =  EO2;
-    A(13,idx('cel')) = -W_PEM;
-    b(13) = Zdot_PEM;
+    % (13) Evaporador RORC
+    A(13,idx('c6AO3')) =  E6AO3;
+    A(13,idx('c15'))   =  E15;
+    A(13,idx('c6AI'))  = -E6AI;
+    A(13,idx('c18r'))  = -E18r;
+    b(13) = Zdot_ORC_EVAP;
 
-    % (14) Cooler CO2-ambiente
-    A(14,idx('c6AO'))  =  E6AO;
-    A(14,idx('c6AO3')) = -E6AO3;
-    b(14) = Zdot_COOLER;
+    % (14) PEM
+    A(14,idx('cH2')) =  EH2;
+    A(14,idx('cO2')) =  EO2;
+    A(14,idx('cel')) = -W_PEM;
+    b(14) = Zdot_PEM;
 
-    % (15) HE de calentamiento de agua para PEM
-    A(15,idx('c7'))   =  E7;
-    A(15,idx('c20'))  =  E20;
-    A(15,idx('c6AO')) = -E6AO;
-    A(15,idx('c19'))  = -E19;
-    b(15) = Zdot_HE;
+    % (15) Cooler
+    A(15,idx('c6AO'))  =  E6AO;
+    A(15,idx('c6AO3')) = -E6AO3;
+    b(15) = Zdot_COOLER;
 
-    % (16) Condensador ORC 
-    A(16,idx('c17')) =  E17;
-    A(16,idx('c16')) = -E16;
-    b(16) = Zdot_ORC_COND;
+    % (16) HE agua-PEM
+    A(16,idx('c7'))   =  E7;
+    A(16,idx('c20'))  =  E20;
+    A(16,idx('c6AO')) = -E6AO;
+    A(16,idx('c19'))  = -E19;
+    b(16) = Zdot_HE;
 
-    % (17) Mezclador
-    A(17,idx('c11')) =  E11;
-    A(17,idx('c9'))  = -E9;
-    A(17,idx('c10')) = -E10;
-    b(17) = 0;
+    % (17) Condensador RORC
+    A(17,idx('c17'))  =  E17;
+    A(17,idx('c16r')) = -E16r;
+    b(17) = Zdot_ORC_COND;
 
-    % (18)-(23) Ecuaciones auxiliares 
-    A(18,idx('c4'))   = 1; A(18,idx('c5'))   = -1; b(18) = 0;   % HTR, lado combustible
-    A(19,idx('c5'))   = 1; A(19,idx('c6'))   = -1; b(19) = 0;   % LTR, lado combustible
-    A(20,idx('c6'))   = 1; A(20,idx('c6AI')) = -1; b(20) = 0;   % split hacia ORC
-    A(21,idx('c6'))   = 1; A(21,idx('c6BI')) = -1; b(21) = 0;   % split hacia compresor 2
-    A(22,idx('c6AI')) = 1; A(22,idx('c6AO3'))= -1; b(22) = 0;   % evaporador ORC, lado combustible
-    A(23,idx('c6AO')) = 1; A(23,idx('c7'))   = -1; b(23) = 0;   % HE agua-PEM, lado combustible
+    % (18) Mezclador Brayton
+    A(18,idx('c11')) =  E11;
+    A(18,idx('c9'))  = -E9;
+    A(18,idx('c10')) = -E10;
+    b(18) = 0;
 
-    % (24) Agua de reposicion
-    A(24,idx('c19')) = 1;
-    b(24) = c_water;
+    % (19)-(24) Ecuaciones auxiliares
+    A(19,idx('c4'))   =  1; A(19,idx('c5'))   = -1; b(19) = 0;
+    A(20,idx('c5'))   =  1; A(20,idx('c6'))   = -1; b(20) = 0;
+    A(21,idx('c6'))   =  1; A(21,idx('c6AI')) = -1; b(21) = 0;
+    A(22,idx('c6'))   =  1; A(22,idx('c6BI')) = -1; b(22) = 0;
+    A(23,idx('c6AI')) =  1; A(23,idx('c6AO3'))= -1; b(23) = 0;
+    A(24,idx('c6AO')) =  1; A(24,idx('c7'))   = -1; b(24) = 0;
 
-    % (25) Oxigeno sin valorizacion economica
-    A(25,idx('cO2')) = 1;
-    b(25) = 0;
+    % (25) Agua de reposicion
+    A(25,idx('c19')) = 1;
+    b(25) = c_water;
+
+    % (26) Oxigeno sin valorizacion economica
+    A(26,idx('cO2')) = 1;
+    b(26) = 0;
+
+    % (27) Regla auxiliar del regenerador
+    A(27,idx('c16r')) =  1;
+    A(27,idx('c16'))  = -1;
+    b(27) = 0;
 
     x_costos = A\b;
-    
+
     sol = struct();
     for k = 1:n
         sol.(names{k}) = x_costos(k);
     end
-    % Flujos de costo [USD/h] ---------------------------------------------
+
+    % Flujos de costo [USD/h]
     Vector_E = [E1; E2; E3; E4; E5; E6; E7; E8; E9; E10; E11; E12; ...
-                E6BI; E6AI; E6AO3; E6AO; E19; E20; E15; E16; E17; E18; ...
-                EH2; EO2; W_PEM];
+                E6BI; E6AI; E6AO3; E6AO; E19; E20; ...
+                E15; E16; E16r; E17; E18; E18r; EH2; EO2; W_PEM];
+
     Cdot = x_costos .* Vector_E;
 
-    % Parametros exergoeconomicos por componente --------------------------
+    % Parametros exergoeconomicos por componente
     Comp_Names = {'Turbina 1'; 'Turbina 2'; 'Compresor 1'; 'Compresor 2'; ...
-                  'HTR'; 'LTR'; 'Evaporador ORC'; 'Turbina ORC'; 'Bomba ORC'; ...
-                  'Condensador ORC'; 'Cooler'; 'HE-PEM'; 'PEM'};
+                  'HTR'; 'LTR'; 'Evaporador RORC'; 'Regenerador RORC'; ...
+                  'Turbina ORC'; 'Bomba ORC'; 'Condensador RORC'; ...
+                  'Cooler'; 'HE-PEM'; 'PEM'};
 
-    Zdot = [Zdot_t1; Zdot_t2; Zdot_c1; Zdot_c2; Zdot_HTR; Zdot_LTR; ...
-               Zdot_ORC_EVAP; Zdot_t3; Zdot_b2; Zdot_ORC_COND; Zdot_COOLER; ...
-               Zdot_HE; Zdot_PEM];
+    Zdot = [Zdot_t1; Zdot_t2; Zdot_c1; Zdot_c2; ...
+            Zdot_HTR; Zdot_LTR; Zdot_ORC_EVAP; Zdot_ORC_REGEN; ...
+            Zdot_t3; Zdot_b2; Zdot_ORC_COND; Zdot_COOLER; Zdot_HE; Zdot_PEM];
+        
+    Xd_b2_kW    = Xd_orc(1)/1000;
+    Xd_t3_kW    = Xd_orc(2)/1000;
+    Xd_regen_kW = Xd_orc(3)/1000;
+    Xd_cond_kW  = Xd_orc(4)/1000;
+    Xd_evap_kW  = Xd_orc(5)/1000;
+    
+    ED_k = [Xd_t1/1000; Xd_t2/1000; Xd_c1/1000; Xd_c2/1000; ...
+            Xd_htr/1000; Xd_ltr/1000; Xd_evap_kW; Xd_regen_kW; ...
+            Xd_t3_kW; Xd_b2_kW; Xd_cond_kW; Xd_cooler/1000; ...
+            Xd_PEM_TOT(1)/1000; Xd_PEM_TOT(4)];
 
-    ED_k = [XD(1,3); XD(1,4); XD(1,1); XD(1,2); XD(1,6); XD(1,7); ...
-            XD(1,13); XD(1,5); XD(1,15); XD(1,14); XD(1,11); XD(1,17); XD(1,19)];
-
-    cF_k = [sol.c1; sol.c3; sol.cel; sol.cel; sol.c4; sol.c5; ...
-            sol.c6AI; sol.c15; sol.cel; sol.c16; sol.c6AO3; sol.c6AO; sol.cel];
+    cF_k = [sol.c1; sol.c3; sol.cel; sol.cel; ...
+            sol.c4; sol.c5; sol.c6AI; sol.c16; ...
+            sol.c15; sol.cel; sol.c16r; sol.c6AO3; ...
+            sol.c6AO; sol.cel];
 
     CD_k = cF_k .* ED_k;
-    f_k  = 100*(Zdot ./(Zdot + CD_k));
 
-    Cdot_fuel = c_solar * (X_solar / 1000);   % [USD/h]
-    E_H2_LHV   = m_H2*LHV_H2/1000;                              % kW
-    W_grid = max(W_Brayton,0) / 1000;                           % [kW]
+    f_k = zeros(size(Zdot));
+    den_fk = Zdot + CD_k;
+    mask_fk = den_fk > eps;
+    f_k(mask_fk) = 100*(Zdot(mask_fk)./den_fk(mask_fk));
 
-    Zdot_total = Z_t1*f_Z + Z_t2*f_Z + Z_c1*f_Z + Z_c2*f_Z + ...
-                 Z_HTR*f_Z + Z_LTR*f_Z + Z_ORC_EVAP*f_Z + ...
-                 Z_t3*f_Z + Z_b2*f_Z + Z_ORC_COND*f_Z + ...
-                 Z_COOLER*f_Z + Z_HE*f_Z + Z_PEM*f_Z;      % [USD/h]
-             
+    % Indicadores globales
+    Cdot_fuel = c_solar * (X_solar/1000);
+    E_H2_LHV  = m_H2*LHV_H2/1000;
+    W_grid    = max(W_Brayton,0)/1000;
 
-    LCOEn = (Cdot_fuel + Zdot_total) / max(W_grid + E_H2_LHV, eps);   % [USD/kWh]
-    LCOH = sol.cH2;           % [USD/kWh_ex]
-    c_el_bus = sol.cel;       % [USD/kWh_ex]
+    Zdot_total = sum(Zdot);
+
+    LCOEn   = (Cdot_fuel + Zdot_total) / max(W_grid + E_H2_LHV, eps);
+    LCOH    = sol.cH2;
+    c_el_bus = sol.cel;
     
 % Salida resultados ---------------------------------------------------
 

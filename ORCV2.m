@@ -25,7 +25,6 @@ function [T6AO3, A_ORC, W_t3, W_b2, Xd_orc, TPhsmx_orc, Q_cond_vec, Q_evap_vec, 
     if nargin < 5 || isempty(ehr)
         ehr = 0.85;
     end
-
     cycle_type = upper(string(cycle_type));
     use_regen = (cycle_type == "RORC");
 
