@@ -10,11 +10,11 @@ horas          = 24*365;  % [h/año]
 peed           = 0.05;    % 
 
 % ------------------ GEOMETRIA / MATERIAL HEX ------------------
-rho   = 7930;    % [kg/m3]
+rho   = 2698.4;    % [kg/m3]
 delta = 0.002;   % [m]
 
 % Factores
-mu_eq_mass = 1.77;      % [kgCO2-eq/kg]
+mu_eq_mass = 2.9;      % [kgCO2-eq/kg]
 mu_CSP     = 9.456e-3;  % [kgCO2-eq/kWh_e]
 mu_tolueno_mass = 32.3; % [kgCO2-eq/kg]
 mu_CO2_mass     = 1.0;  % [kgCO2-eq/kg]
@@ -22,6 +22,7 @@ mu_CO2_mass     = 1.0;  % [kgCO2-eq/kg]
 % ------------------ POTENCIA NETA Y ENERGIA------------------
 % Convención física: turbinas producen (+), compresores/bombas consumen (-)
 WNETO  = (W_t1 + W_t2 + W_t3) - (W_c1 + W_c2 + W_b2); % [kW]
+W_rank = W_t3-W_b2;
 E_util = WNETO * horas * years * disponibilidad;      % [kWh_e]
 
 % ------------------ MASA EQUIVALENTE EQUIPOS ------------------
@@ -153,7 +154,7 @@ co2_de = (co2_c - co2_op) * 0.03;
 GWP_elec = (Yco_block + Yom_block + Yde_block)/E_util; % [kgCO2-eq/kWh_e]
 
 % ------------------ ACOPLE PEM ------------------
-[Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM]= PEM_LCA(GWP_elec, WNETO, years, disponibilidad, horas);
+[Ytotal_PEM,Yco_total_PEM,Yde_total_PEM,Yom_total_PEM]= PEM_LCA(GWP_elec, W_rank, years, disponibilidad, horas);
 Y_PEME = Yom_total_PEM+Yde_total_PEM+Yco_total_PEM;
 % ------------------ TOTALES SISTEMA COMPLETO ------------------
 Yco_total = Yco_block;

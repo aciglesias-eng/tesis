@@ -360,7 +360,7 @@ format long
         XD(1,6) = Xd_htr/1000;          % HTR
         XD(1,7) = Xd_ltr/1000;          % LTR
         XD(1,8) = Xloss_sr/1000;        % Loss receiver
-        XD(1,9) = Xloss_field/1000;     % Loss field
+        XD(1,9) = Xloss_field/1000;     % Los<s field
         XD(1,10) = Xd_sr/1000;          % Destruida Re_Heater 
         XD(1,11) = Xd_cooler/1000;      % Destruida cooler
         XD(1,12) = x_loss_cooler/1000;  % Perdida en el aire
