@@ -31,7 +31,7 @@ function [T6AO3, A_ORC, W_t3, W_b2, Xd_orc, TPhsmx_orc, Q_cond_vec, Q_evap_vec, 
     %----------------------------------------------------------------------
     % ENTRADAS / PARAMETROS DEL SISTEMA ORC
     %----------------------------------------------------------------------
-    fluid = 'toluene';
+    fluid = 'cyclohex';
     np = 0.85;
     nt = 0.85;
     Ap = 39;
