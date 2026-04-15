@@ -1,4 +1,3 @@
-%{
 %% 
 clear%;clc
 rc = [2.50 2.70 2.90 3.10 3.30 3.50];
@@ -39,7 +38,7 @@ varout26(i)  = XD(1,16);   % Perdida en el agua
 varout27(i)  = XD(1,17);   % Destruida HE
 varout28(i)  = XD(1,18);   % Exergia aportada por el sistema solar
 varout29(i)  = XD(1,19);   % Exergia destruida PEM
-varout30(i)  = XD(1,20);   % Exergia destruida total
+varout30(i)  = XD(1,20);   % Exergia destruida regenerador
 
 varout31(i) = In(1,1);     % Exergy waste ratio EWR
 varout32(i) = In(1,2);     % Environmental effect factor (EEF)
@@ -48,10 +47,10 @@ varout33(i) = In(1,3);     % Exergetic sustainability index (ESI)
 varout34(i) = Ytotal;     % Impacto ambiental total;
 varout35(i) = Ytotal_PEM; % GWP PEM respecto a total kgCO2eq/kgH2
 varout36(i) = n_ex_2;
-
 varout37(i) = LCOEn;
 varout38(i) = LCOH;
 varout39(i) = c_el_bus;
+varout40(i) = XD(1,21);   % Exergia destruida total
 end
 
 
@@ -65,7 +64,7 @@ resultados2 = [(rc)', varout11', varout12', varout13', ...
     varout28', varout29', varout30'
 ];
 resultados3 = [(rc)', varout31', varout32', varout33', varout34', varout35',...
-    varout36', varout37', varout38', varout39'
+    varout36', varout37', varout38', varout39', varout40
     ];
 
 
@@ -114,7 +113,7 @@ varout26(i)  = XD(1,16);   % Perdida en el agua
 varout27(i)  = XD(1,17);   % Destruida HE
 varout28(i)  = XD(1,18);   % Exergia aportada por el sistema solar
 varout29(i)  = XD(1,19);   % Exergia destruida PEM
-varout30(i)  = XD(1,20);   % Exergia destruida total
+varout30(i)  = XD(1,20);   % Exergia destruida regenerador
 
 varout31(i) = In(1,1);     % Exergy waste ratio EWR
 varout32(i) = In(1,2);     % Environmental effect factor (EEF)
@@ -123,10 +122,10 @@ varout33(i) = In(1,3);     % Exergetic sustainability index (ESI)
 varout34(i) = Ytotal;     % Impacto ambiental total;
 varout35(i) = Ytotal_PEM; % GWP PEM respecto a total kgCO2eq/kgH2
 varout36(i) = n_ex_2;
-
 varout37(i) = LCOEn;
 varout38(i) = LCOH;
 varout39(i) = c_el_bus;
+varout40(i) = XD(1,21);   % Exergia destruida total
 end
 
 
@@ -140,7 +139,7 @@ resultados2 = [(nt)', varout11', varout12', varout13', ...
     varout28', varout29', varout30'
 ];
 resultados3 = [(nt)', varout31', varout32', varout33', varout34', varout35',...
-    varout36', varout37', varout38', varout39'
+    varout36', varout37', varout38', varout39', varout40
 ];
 
 
@@ -192,7 +191,7 @@ varout26(i)  = XD(1,16);   % Perdida en el agua
 varout27(i)  = XD(1,17);   % Destruida HE
 varout28(i)  = XD(1,18);   % Exergia aportada por el sistema solar
 varout29(i)  = XD(1,19);   % Exergia destruida PEM
-varout30(i)  = XD(1,20);   % Exergia destruida total
+varout30(i)  = XD(1,20);   % Exergia destruida regenerador
 
 varout31(i) = In(1,1);     % Exergy waste ratio EWR
 varout32(i) = In(1,2);     % Environmental effect factor (EEF)
@@ -201,10 +200,10 @@ varout33(i) = In(1,3);     % Exergetic sustainability index (ESI)
 varout34(i) = Ytotal;     % Impacto ambiental total;
 varout35(i) = Ytotal_PEM; % GWP PEM respecto a total kgCO2eq/kgH2
 varout36(i) = n_ex_2;
-
 varout37(i) = LCOEn;
 varout38(i) = LCOH;
 varout39(i) = c_el_bus;
+varout40(i) = XD(1,21);   % Exergia destruida total
 end
 
 
@@ -218,7 +217,7 @@ resultados2 = [(nc)', varout11', varout12', varout13', ...
     varout28', varout29', varout30'
 ];
 resultados3 = [(nc)', varout31', varout32', varout33', varout34', varout35',...
-    varout36', varout37', varout38', varout39'
+    varout36', varout37', varout38', varout39', varout40
 ];
 
 
@@ -226,7 +225,6 @@ resultados3 = [(nc)', varout31', varout32', varout33', varout34', varout35',...
 xlswrite('Salidas.xlsx',resultados ,'nc','B3')
 xlswrite('Salidas.xlsx',resultados2 ,'nc','B16')    
 xlswrite('Salidas.xlsx',resultados3 ,'nc','B29')
-%}
 
 %%
 clear%;clc
@@ -295,7 +293,7 @@ resultados2 = [(T-273.15)', varout11', varout12', varout13', ...
     varout28', varout29', varout30'
 ];
 resultados3 = [(T-273.15)', varout31', varout32', varout33', varout34', varout35',...
-    varout36', varout37', varout38', varout39'
+    varout36', varout37', varout38', varout39', varout40
     
 ];
 
