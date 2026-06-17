@@ -10,11 +10,11 @@ horas          = 24*365;  % [h/año]
 peed           = 0.05;    % 
 
 % ------------------ GEOMETRIA / MATERIAL HEX ------------------
-rho   = 2698.4;    % [kg/m3]
+rho   = 8900;    % [kg/m3]
 delta = 0.002;   % [m]
 
 % Factores
-mu_eq_mass = 2.9;      % [kgCO2-eq/kg]
+mu_eq_mass = 2.20;      % [kgCO2-eq/kg]
 mu_CSP     = 9.456e-3;  % [kgCO2-eq/kWh_e]
 mu_tolueno_mass = 32.3; % [kgCO2-eq/kg]
 mu_CO2_mass     = 1.0;  % [kgCO2-eq/kg]

@@ -13,7 +13,8 @@ format long
     %   V= Voltaje de celda [V]
     %   mdotH2= Flujo másico de H2 producido [kg/s]
     %   mdotH2O_in= Flujo másico mínimo de H2O consumido [kg/s]
-
+    
+    
         % CONSTANTES FÍSICAS
             R = 8.314;             % J/mol-K
             F = 96486;             % C/mol
@@ -22,7 +23,7 @@ format long
             M_H2O = 18.01528e-3;   % kg/mol
             x_ch_H2 = 236.09;      % kJ/mol
             x_ch_O = 3.97;         % kJ/mol
-            x_ch_H2O = 0.9;       % kJ/mol
+            x_ch_H2O = 0.9;        % kJ/mol
         % Entradas del ciclo combinado a la PEM
             T0 = 25 + 273.15;      % Temp low (K)--> Guajira
             fluido = 'water';
