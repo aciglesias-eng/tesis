@@ -1,4 +1,3 @@
-%{
 clear%;clc
 rc = [2.50 2.70 2.90 3.10 3.30 3.50];
 nc = 0.89;
@@ -8,12 +7,12 @@ pmaire=100; % EN PORCENTAJE
 
 
 for i=1:length(rc)   
-[LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T, rc(i), pmaire);
+[n_th_Brayton,n_th_ORC, LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T, rc(i), pmaire);
     display(i);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
-varout3(i)   = n_ciclo;    % Eficiencia energética ciclo
-varout4(i)   = n_ex;       % Eficiencia exergética 
+varout3(i)   = n_ciclo;    % Eficiencia energï¿½tica ciclo
+varout4(i)   = n_ex;       % Eficiencia exergï¿½tica 
 varout5(i)   = n_th;       % Eficiencia termica
 varout6(i)   = n_en_PEM;   % Eficiencia termica PEM
 varout7(i)   = n_ex_PEM;   % Eficiencia exergetica PEM 
@@ -52,6 +51,8 @@ varout37(i) = LCOEn;
 varout38(i) = LCOH;
 varout39(i) = c_el_bus;
 varout40(i) = XD(1,21);   % Exergia destruida total
+varout41(i) = n_th_ORC;
+varout42(i) = n_th_Brayton;
 end
 
 
@@ -65,7 +66,7 @@ resultados2 = [(rc)', varout11', varout12', varout13', ...
     varout28', varout29', varout30'
 ];
 resultados3 = [(rc)', varout31', varout32', varout33', varout34', varout35',...
-    varout36', varout37', varout38', varout39', varout40'
+    varout36', varout37', varout38', varout39', varout40', varout41', varout42'
     ];
 
 
@@ -84,12 +85,12 @@ pmaire=100; % EN PORCENTAJE
 
 
 for i=1:length(nt)   
-[LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt(i), nc, T, rc, pmaire);
+[n_th_Brayton,n_th_ORC, LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt(i), nc, T, rc, pmaire);
     display(i);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
-varout3(i)   = n_ciclo;    % Eficiencia energética ciclo
-varout4(i)   = n_ex;       % Eficiencia exergética 
+varout3(i)   = n_ciclo;    % Eficiencia energï¿½tica ciclo
+varout4(i)   = n_ex;       % Eficiencia exergï¿½tica 
 varout5(i)   = n_th;       % Eficiencia termica
 varout6(i)   = n_en_PEM;   % Eficiencia termica PEM
 varout7(i)   = n_ex_PEM;   % Eficiencia exergetica PEM 
@@ -128,6 +129,8 @@ varout37(i) = LCOEn;
 varout38(i) = LCOH;
 varout39(i) = c_el_bus;
 varout40(i) = XD(1,21);   % Exergia destruida total
+varout41(i) = n_th_ORC;
+varout42(i) = n_th_Brayton;
 end
 
 
@@ -141,7 +144,7 @@ resultados2 = [(nt)', varout11', varout12', varout13', ...
     varout28', varout29', varout30'
 ];
 resultados3 = [(nt)', varout31', varout32', varout33', varout34', varout35',...
-    varout36', varout37', varout38', varout39', varout40'
+    varout36', varout37', varout38', varout39', varout40', varout41', varout42'
 ];
 
 
@@ -163,12 +166,12 @@ pmaire=1; % EN PORCENTAJE
 
 
 for i=1:length(nc)   
-[LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc(i), T, rc, pmaire);
+[n_th_Brayton,n_th_ORC, LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc(i), T, rc, pmaire);
     display(i);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
-varout3(i)   = n_ciclo;    % Eficiencia energética ciclo
-varout4(i)   = n_ex;       % Eficiencia exergética 
+varout3(i)   = n_ciclo;    % Eficiencia energï¿½tica ciclo
+varout4(i)   = n_ex;       % Eficiencia exergï¿½tica 
 varout5(i)   = n_th;       % Eficiencia termica
 varout6(i)   = n_en_PEM;   % Eficiencia termica PEM
 varout7(i)   = n_ex_PEM;   % Eficiencia exergetica PEM 
@@ -207,6 +210,8 @@ varout37(i) = LCOEn;
 varout38(i) = LCOH;
 varout39(i) = c_el_bus;
 varout40(i) = XD(1,21);   % Exergia destruida total
+varout41(i) = n_th_ORC;
+varout42(i) = n_th_Brayton;
 end
 
 
@@ -220,7 +225,7 @@ resultados2 = [(nc)', varout11', varout12', varout13', ...
     varout28', varout29', varout30'
 ];
 resultados3 = [(nc)', varout31', varout32', varout33', varout34', varout35',...
-    varout36', varout37', varout38', varout39', varout40'
+    varout36', varout37', varout38', varout39', varout40', varout41', varout42'
 ];
 
 
@@ -230,7 +235,6 @@ xlswrite('Salidas.xlsx',resultados2 ,'nc','B16')
 xlswrite('Salidas.xlsx',resultados3 ,'nc','B29')
 
 
-%}
 %%
 clear%;clc
 T=[500 550 600 650 700 750 800 850 900 800]+273.15;
@@ -245,8 +249,8 @@ for i=1:length(T)
 [n_th_Brayton,n_th_ORC, LCOH, c_el_bus,LCOEn, WNETO, W_Rankine, n_ciclo, n_ex, n_ex_2, n_th, n_en_PEM,n_ex_PEM, T20, m_H2, m_H2O_in, XD, In, Ytotal, Ytotal_PEM] = SBCRV2(nt, nc, T(i), rc, pmaire);
 varout1(i)   = WNETO/1000000; % MW
 varout2(i)   = W_Rankine/1000000; %MW
-varout3(i)   = n_ciclo;    % Eficiencia energética ciclo
-varout4(i)   = n_ex;       % Eficiencia exergética 
+varout3(i)   = n_ciclo;    % Eficiencia energï¿½tica ciclo
+varout4(i)   = n_ex;       % Eficiencia exergï¿½tica 
 varout5(i)   = n_th;       % Eficiencia termica
 varout6(i)   = n_en_PEM;   % Eficiencia termica PEM
 varout7(i)   = n_ex_PEM;   % Eficiencia exergetica PEM 
